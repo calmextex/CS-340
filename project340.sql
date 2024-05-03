@@ -36,17 +36,25 @@ CREATE TABLE Courses (
     FOREIGN KEY (stateCourseCode) REFERENCES StateCourseCodes (stateCourseCode)
 );
 
-DROP TABLE IF exists CourseEnrollments;
-CREATE TABLE CourseEnrollments (
-    enrollmentID int NOT NULL AUTO_INCREMENT,
-    courseID int NOT NULL,
+DROP TABLE IF EXISTS Enrollments;
+CREATE TABLE Enrollments (
+	enrollmentID int NOT NULL AUTO_INCREMENT,
     studentID int NOT NULL,
-    courseStartDate date NOT NULL,
-    courseEndDate date,
+    enrollmentStartDate date NOT NULL,
+    enrollmentEndDate date,
     PRIMARY KEY (enrollmentID),
     UNIQUE KEY (enrollmentID),
+    FOREIGN KEY (studentID) references Students (studentID)
+);
+
+DROP TABLE IF exists CourseEnrollments;
+CREATE TABLE CourseEnrollments (
+	enrollmentID int NOT NULL,
+    courseID int NOT NULL,
+    courseStartDate date NOT NULL,
+    courseEndDate date,
     CONSTRAINT FOREIGN KEY (courseID) REFERENCES Courses(courseID),
-    CONSTRAINT FOREIGN KEY (studentID) REFERENCES Students(studentID)
+    CONSTRAINT FOREIGN KEY (enrollmentID) REFERENCES Enrollments (enrollmentID)
 );
 
 DROP TABLE IF EXISTS Grades;
@@ -81,7 +89,18 @@ VALUES ('Abraham', 'Zamora', '1986-05-13', 12, '2023-07-03', NULL, 'abe.zamora86
 ('Bob', 'Loblaw', '1997-04-12', 11, '2023-07-03', '2024-04-21', 'bobloblaw@gmail.com', '510-232-5555', '123 A Street', 'San Francisco', 'CA', '94110', 'Gee Loblaw III'),
 ('Rohan', 'Jones', '1994-05-20', 12, '2023-07-03', NULL, 'rjones@ymail.com', 415-666-4201, '666 Pengtagram Street', 'Ghoulville', 'TX', '79927', 'Beelzebub Jones');
 
-SELECT * FROM Students;
+--SELECT * FROM Students;
+
+INSERT INTO Enrollments (
+	studentID,
+    enrollmentStartDate,
+    enrollmentEndDate
+)
+VALUES(1, (SELECT Students.entryDate FROM STUDENTS WHERE Students.studentID = '1'), (SELECT students.leaveDate FROM Students WHERE Students.studentID = '1')),
+(2, (SELECT Students.entryDate FROM STUDENTS WHERE Students.studentID = '2'), (SELECT Students.leaveDate FROM Students WHERE Students.studentID = '2')),
+(3, (SELECT Students.entryDate FROM STUDENTS WHERE Students.studentID = '3'), (SELECT Students.leaveDate FROM Students WHERE Students.studentID = '3'));
+
+--SELECT * FROM Enrollments;
 INSERT INTO StateCourseCodes (
     stateCourseCode,
     subject
@@ -89,7 +108,7 @@ INSERT INTO StateCourseCodes (
 VALUES(765, 'Calculus I'),
 (724, 'AP Biology'),
 (745, 'Biology');
-SELECT * FROM StateCourseCodes;
+--SELECT * FROM StateCourseCodes;
 
 INSERT INTO Courses (
     courseName,
@@ -97,16 +116,16 @@ INSERT INTO Courses (
 )
 VALUES('AP Biology for Nerds', 724),
 ('Bio', 745),('Bio-Remedial', 745),('Differential Calculus', 765), ('Calculus I', 765);
-SELECT * From Courses;
+--SELECT * From Courses;
 
 INSERT INTO CourseEnrollments (
     courseID,
-    studentID,
+    enrollmentID,
     courseStartDate,
     courseEndDate
 )
-VALUES(1, 1, '2023-07-03', '2023-12-15'),(5, 1, '2024-01-05', NULL),(2, 2, '2023-07-03', '2024-04-21'),(3, 3, '2023-07-03', NULL),(4, 3, '2023-07-03', '2024-01-30');
-SELECT * FROM CourseEnrollments;
+VALUES(1, 1, '2023-07-03', '2023-12-15'),(5, 1, '2024-01-05', NULL),(2, 2, '2023-07-03', '2024-04-21'),(3, 3, '2023-07-03', NULL),(4, 3, '2023-07-03', '2024-01-30'),(5,3,'2024-01-05', NULL);
+--SELECT * FROM CourseEnrollments;
 
 INSERT INTO Grades (
     courseID,
@@ -114,4 +133,4 @@ INSERT INTO Grades (
     gradeAssigned
 )
 VALUES(1,1,'A'), (2,2,'B+'), (4,3,'A-');
-SELECT * FROM Grades;
+--SELECT * FROM Grades;
