@@ -59,12 +59,9 @@ CREATE TABLE CourseEnrollments (
 
 DROP TABLE IF EXISTS Grades;
 CREATE TABLE Grades (
-    gradeID int NOT NULL AUTO_INCREMENT,
     courseID int NOT NULL,
     studentID int NOT NULL,
     gradeAssigned varchar(255) NOT NULL,
-    PRIMARY KEY(gradeID),
-    UNIQUE KEY(gradeID),
     CONSTRAINT FOREIGN KEY (courseID) REFERENCES Courses(courseID),
     CONSTRAINT FOREIGN KEY (studentID) REFERENCES Students(studentID)
 );
