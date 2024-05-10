@@ -42,7 +42,7 @@ CREATE TABLE Courses (
     stateCourseCode int NOT NULL,
     PRIMARY KEY (courseID),
     UNIQUE KEY (courseID),
-    FOREIGN KEY (stateCourseCode) REFERENCES StateCourseCodes(stateCourseCode) ON UPDATE CASCADE ON DELETE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (stateCourseCode) REFERENCES StateCourseCodes(stateCourseCode) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 --Enrollments Table: This is will keep track of enrollment term by term.
@@ -54,7 +54,7 @@ CREATE TABLE Enrollments (
     enrollmentEndDate date,
     PRIMARY KEY (enrollmentID),
     UNIQUE KEY (enrollmentID),
-    FOREIGN KEY (studentID) references Students(studentID) ON UPDATE CASCADE ON DELETE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (studentID) references Students(studentID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 --CourseEnrollments: Tracks student enrollment in courses. A student can be assigned multiple courses at once, including completed courses.
