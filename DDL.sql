@@ -39,30 +39,30 @@ CREATE TABLE Courses (
     stateCourseCode int NOT NULL,
     PRIMARY KEY (courseID),
     UNIQUE KEY (courseID),
-    FOREIGN KEY (stateCourseCode) REFERENCES StateCourseCodes (stateCourseCode) ON UPDATE CASCADE ON DELETE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (stateCourseCode) REFERENCES StateCourseCodes(stateCourseCode) ON UPDATE CASCADE ON DELETE CASCADE ON DELETE SET NULL
 );
 
 -- Creating the Enrollments table
 DROP TABLE IF EXISTS Enrollments;
 CREATE TABLE Enrollments (
-	enrollmentID int NOT NULL AUTO_INCREMENT,
+    enrollmentID int NOT NULL AUTO_INCREMENT,
     studentID int NOT NULL,
     enrollmentStartDate date NOT NULL,
     enrollmentEndDate date,
     PRIMARY KEY (enrollmentID),
     UNIQUE KEY (enrollmentID),
-    FOREIGN KEY (studentID) references Students (studentID) ON UPDATE CASCADE ON DELETE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (studentID) references Students(studentID) ON UPDATE CASCADE ON DELETE CASCADE ON DELETE SET NULL
 );
 
 -- Creating the CourseEnrollments table
 DROP TABLE IF exists CourseEnrollments;
 CREATE TABLE CourseEnrollments (
-	enrollmentID int NOT NULL,
+    enrollmentID int NOT NULL,
     courseID int NOT NULL,
     courseStartDate date NOT NULL,
     courseEndDate date,
     CONSTRAINT FOREIGN KEY (courseID) REFERENCES Courses(courseID) ON UPDATE CASCADE,
-    CONSTRAINT FOREIGN KEY (enrollmentID) REFERENCES Enrollments (enrollmentID) ON UPDATE CASCADE
+    CONSTRAINT FOREIGN KEY (enrollmentID) REFERENCES Enrollments(enrollmentID) ON UPDATE CASCADE
 );
 
 -- Creating the Grades table
@@ -91,31 +91,96 @@ INSERT INTO Students (
     zipCode,
     parentGuardian
 )
-VALUES ('Abraham', 'Zamora', '1986-05-13', 12, '2023-07-03', NULL, 'abe.zamora86@gmail.com', '510-239-1492', '10944 San Pablo Ave.', 'El Cerrito', 'CA', '94110', 'Roberto Zamora'),
-('Bob', 'Loblaw', '1997-04-12', 11, '2023-07-03', '2024-04-21', 'bobloblaw@gmail.com', '510-232-5555', '123 A Street', 'San Francisco', 'CA', '94110', 'Gee Loblaw III'),
-('Rohan', 'Jones', '1994-05-20', 12, '2023-07-03', NULL, 'rjones@ymail.com', 415-666-4201, '666 Pengtagram Street', 'Ghoulville', 'TX', '79927', 'Beelzebub Jones');
-
+VALUES 
+(
+    'Abraham', 
+    'Zamora', 
+    '1986-05-13', 
+    12, 
+    '2023-07-03', 
+    NULL, 
+    'abe.zamora86@gmail.com', 
+    '510-239-1492', 
+    '10944 San Pablo Ave.', 
+    'El Cerrito', 
+    'CA', 
+    '94110', 
+    'Roberto Zamora'
+),
+(
+    'Bob', 
+    'Loblaw', 
+    '1997-04-12', 
+    11, 
+    '2023-07-03', 
+    '2024-04-21', 
+    'bobloblaw@gmail.com', 
+    '510-232-5555', 
+    '123 A Street', 
+    'San Francisco', 
+    'CA', 
+    '94110', 
+    'Gee Loblaw III'
+),
+(
+    'Rohan', 
+    'Jones', 
+    '1994-05-20', 
+    12, 
+    '2023-07-03', 
+    NULL, 
+    'rjones@ymail.com', 
+    '415-666-4201', 
+    '666 Pengtagram Street', 
+    'Ghoulville', 
+    'TX', 
+    '79927', 
+    'Beelzebub Jones'
+);
 --SELECT * FROM Students;
 
 -- insert sample data into the enrollments table
 INSERT INTO Enrollments (
-	studentID,
+    studentID,
     enrollmentStartDate,
     enrollmentEndDate
 )
-VALUES(1, (SELECT Students.entryDate FROM STUDENTS WHERE Students.studentID = '1'), (SELECT students.leaveDate FROM Students WHERE Students.studentID = '1')),
-(2, (SELECT Students.entryDate FROM STUDENTS WHERE Students.studentID = '2'), (SELECT Students.leaveDate FROM Students WHERE Students.studentID = '2')),
-(3, (SELECT Students.entryDate FROM STUDENTS WHERE Students.studentID = '3'), (SELECT Students.leaveDate FROM Students WHERE Students.studentID = '3'));
+VALUES
+(
+    1, 
+    (SELECT Students.entryDate FROM Students WHERE Students.studentID = '1'), 
+    (SELECT Students.leaveDate FROM Students WHERE Students.studentID = '1')
+),
+(
+    2, 
+    (SELECT Students.entryDate FROM Students WHERE Students.studentID = '2'), 
+    (SELECT Students.leaveDate FROM Students WHERE Students.studentID = '2')
+),
+(
+    3, 
+    (SELECT Students.entryDate FROM Students WHERE Students.studentID = '3'), 
+    (SELECT Students.leaveDate FROM Students WHERE Students.studentID = '3')
+);
 
 --SELECT * FROM Enrollments;
+
 -- insert sample data into the state course codes table
 INSERT INTO StateCourseCodes (
     stateCourseCode,
     subject
 )
-VALUES(765, 'Calculus I'),
-(724, 'AP Biology'),
-(745, 'Biology');
+VALUES
+(
+    765, 
+    'Calculus I'
+),
+(   724, 
+    'AP Biology'
+),
+(
+    745, 
+    'Biology'
+);
 --SELECT * FROM StateCourseCodes;
 
 -- insert sample data into the courses table
@@ -123,9 +188,29 @@ INSERT INTO Courses (
     courseName,
     stateCourseCode
 )
-VALUES('AP Biology for Nerds', 724),
-('Bio', 745),('Bio-Remedial', 745),('Differential Calculus', 765), ('Calculus I', 765);
+VALUES
+(
+    'AP Biology for Nerds', 
+    724
+),
+(
+    'Bio', 
+    745
+),
+(
+    'Bio-Remedial', 
+    745
+),
+(
+    'Differential Calculus', 
+    765
+), 
+(
+    'Calculus I', 
+    765
+);
 --SELECT * From Courses;
+
 -- insert sample data into the course enrollments table
 INSERT INTO CourseEnrollments (
     courseID,
