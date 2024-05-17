@@ -64,8 +64,8 @@ CREATE TABLE CourseEnrollments (
     courseID int NOT NULL,
     courseStartDate date NOT NULL,
     courseEndDate date,
-    CONSTRAINT FOREIGN KEY (courseID) REFERENCES Courses(courseID) ON UPDATE CASCADE,
-    CONSTRAINT FOREIGN KEY (enrollmentID) REFERENCES Enrollments(enrollmentID) ON UPDATE CASCADE
+    CONSTRAINT FOREIGN KEY (courseID) REFERENCES Courses(courseID) ON DELETE CASCADE,
+    CONSTRAINT FOREIGN KEY (enrollmentID) REFERENCES Enrollments(enrollmentID) ON DELETE CASCADE
 );
 
 --Grades Table: Grades assigned for courses completed. Once a course is complete, grades are assigned.
