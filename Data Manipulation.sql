@@ -5,7 +5,8 @@ SELECT * FROM Students;
 -- add a new student
 INSERT INTO Students (
     firstName, 
-    lastName, dateOfBirth, 
+    lastName, 
+    dateOfBirth, 
     gradeLevel, 
     entryDate, 
     leaveDate, 
