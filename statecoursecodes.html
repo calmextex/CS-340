@@ -1,25 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>State Course Codes</title>
-    </head>
-    <body>
-        <div>
-            <a href="students.html">Students</a>
-            |
-            <a href="enrollments.html">Enrollments</a>
-            |
-            <a href="courses.html">Courses</a>
-            |
-            <a href="statecoursecodes.html">State Course Codes</a>
-            |
-            <a href="courseenrollments.html">Course Enrollments</a>
-            |
-            <a href="grades.html">Grades</a>
-        </div>
-        <h1>Student Information System</h1>
-        <p>This is a student information system. Click on the tabs above view each entity.</p>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Course Codes</title>
+    <script language="JavaScript">
+        function showForm(action) {
+            if (action == 'insert') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'block';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'update') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'block';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'delete') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'block';
+            } else { // by default display select
+                document.getElementById('select').style.display = 'block';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            }
+        }
+
+        function newStateCourseCode() { 
+            showForm('insert'); 
+        }
+
+        function updateStateCourseCode(id) { 
+            showForm('update');
+            var courseValue = document.getElementById('courseValue_' + id).innerText;
+
+            document.getElementById('updateCourseCodeID').value = id;
+            document.getElementById('updateCourseCodeIDDisplay').innerText = id;
+            document.getElementById('updateCourseValue').value = courseValue;
+        }
+
+        function deleteStateCourseCode(id, code) { 
+            showForm('delete');
+            document.getElementById('deleteCourseCodeID').innerText = id;
+            document.getElementById('deleteCourseCodeValue').innerText = code;
+        }
+
+        function selectStateCourseCode() { 
+            showForm('select'); 
+        }
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("courseCodeTable");
+            tr = table.getElementsByTagName("tr");
+            
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="selectStateCourseCode()">
+    <div>
+        <a href="students.html">Students</a>
+        |
+        <a href="enrollments.html">Enrollments</a>
+        |
+        <a href="courses.html">Courses</a>
+        |
+        <a href="statecoursecodes.html">State Course Codes</a>
+        |
+        <a href="courseenrollments.html">Course Enrollments</a>
+        |
+        <a href="grades.html">Grades</a>
+    </div>
+    <h1>Student Information System</h1>
+    <p>This is a student information system. Click on the tabs above to view each entity.</p>
+    
+    <div id="select">
+        <p><a href="#" onClick="newStateCourseCode()">New State Course Code</a></p>
+        <table id="courseCodeTable" border="1" cellpadding="5">
+            <tr>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Course Code ID</th>
+                <th>Subject</th>
+            </tr>
+            <tr>
+                <td><a href="#" onClick="updateStateCourseCode('765')">Edit</a></td>
+                <td><a href="#" onClick="deleteStateCourseCode('765', 'Calculus I')">Delete</a></td>
+                <td align="center" id="courseCodeID_765">765</td>
+                <td align="center" id="courseValue_765">Calculus I</td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+        <p>&nbsp;</p>
+    </div>
+
+    <div id="insert" style="display:none;">
+        <form method="POST" id="addCourseCode">
+            <legend><strong>Add a new state course code</strong></legend>
+            <fieldset class="fields">
+                <div><label> Course Code ID </label> <input type="text" name="course_code_id"></div>
+                <div><label> Subject </label> <input type="text" name="subject"></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Add Course Code">
+            <input class="btn" type="button" value="Cancel" onClick="selectStateCourseCode()">
+        </form>
+    </div>
+
+    <div id="update" style="display:none;">
+        <form method="POST" id="updateCourseCode">
+            <legend><strong>Update State Course Code</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="courseCodeID" id="updateCourseCodeID" value="">
+                <div><label> Course Code ID: </label> <span id="updateCourseCodeIDDisplay"></span></div>
+                <div><label> Subject </label> <input type="text" name="subject" id="updateCourseValue" value=""></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Save Update">
+            <input class="btn" type="button" value="Cancel" onClick="selectStateCourseCode()">
+        </form>
+    </div>
+
+    <div id="delete" style="display:none;">
+        <form method="POST" id="deleteCourseCode">
+            <legend><strong>Delete State Course Code</strong></legend>
+            <fieldset class="fields">
+                <p>Do you want to delete?</p>
+                <div><label><strong>Course Code ID:</strong></label> <span id="deleteCourseCodeID"></span></div>
+                <div><label> <strong>Subject:</strong> </label> <span id="deleteCourseCodeValue"></span></div>
+            </fieldset>
+            <input type="hidden" name="courseCodeID" id="deleteCourseCodeIDInput" value="">
+            <input class="btn" type="submit" value="Delete Course Code">
+            <input class="btn" type="button" value="Cancel" onClick="selectStateCourseCode()">
+        </form>
+    </div>
+</body>
 </html>

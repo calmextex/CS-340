@@ -1,25 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Grades</title>
-    </head>
-    <body>
-        <div>
-            <a href="students.html">Students</a>
-            |
-            <a href="enrollments.html">Enrollments</a>
-            |
-            <a href="courses.html">Courses</a>
-            |
-            <a href="statecoursecodes.html">State Course Codes</a>
-            |
-            <a href="courseenrollments.html">Course Enrollments</a>
-            |
-            <a href="grades.html">Grades</a>
-        </div>
-        <h1>Student Information System</h1>
-        <p>This is a student information system. Click on the tabs above view each entity.</p>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades</title>
+    <script language="JavaScript">
+        function viewForm(action) {
+            if (action == 'insert') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'block';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'update') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'block';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'delete') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'block';
+            } else { // by default display select
+                document.getElementById('select').style.display = 'block';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            }
+        }
+
+        function newGrade() { 
+            viewForm('insert'); 
+        }
+
+        function updateGrade(pid) { 
+            viewForm('update');
+            var courseID = document.getElementById('courseID_' + pid).innerText;
+            var studentID = document.getElementById('studentID_' + pid).innerText;
+            var gradeValue = document.getElementById('gradeValue_' + pid).innerText;
+
+            document.getElementById('updateGradeID').value = pid;
+            document.getElementById('updateCourseID').value = courseID;
+            document.getElementById('updateStudentID').value = studentID;
+            document.getElementById('updateGradeValue').value = gradeValue;
+        }
+
+        function deleteGrade(pid, name) { 
+            viewForm('delete');
+            document.getElementById('deleteGradeID').innerText = pid;
+            document.getElementById('deleteGradeValue').innerText = name;
+        }
+
+        function selectGrade() { 
+            viewForm('select'); 
+        }
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("gradeTable");
+            tr = table.getElementsByTagName("tr");
+            
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="selectGrade()">
+    <div>
+        <a href="students.html">Students</a>
+        |
+        <a href="enrollments.html">Enrollments</a>
+        |
+        <a href="courses.html">Courses</a>
+        |
+        <a href="statecoursecodes.html">State Course Codes</a>
+        |
+        <a href="courseenrollments.html">Course Enrollments</a>
+        |
+        <a href="grades.html">Grades</a>
+    </div>
+    <h1>Student Information System</h1>
+    <p>This is a student information system. Click on the tabs above to view each entity.</p>
+    
+    <div id="select">
+        <p><a href="#" onClick="newGrade()">New Grade</a> </p>
+        <table id="gradeTable" border="1" cellpadding="5">
+            <tr>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Course ID</th>
+                <th>Student ID</th>
+                <th>Grade Assigned</th>
+            </tr>
+            <tr>
+                <td><a href="#" onClick="updateGrade('1')">Edit</a></td>
+                <td><a href="#" onClick="deleteGrade('1', 'A')">Delete</a></td>
+                <td align="center" id="courseID_1">1</td>
+                <td align="center" id="studentID_1">1</td>
+                <td align="center" id="gradeValue_1">A</td>
+            </tr>
+            <tr>
+                <td><a href="#" onClick="updateGrade('2')">Edit</a></td>
+                <td><a href="#" onClick="deleteGrade('2', 'B+')">Delete</a></td>
+                <td align="center" id="courseID_2">2</td>
+                <td align="center" id="studentID_2">2</td>
+                <td align="center" id="gradeValue_2">B+</td>
+            </tr>
+            <tr>
+                <td><a href="#" onClick="updateGrade('4')">Edit</a></td>
+                <td><a href="#" onClick="deleteGrade('4', 'A-')">Delete</a></td>
+                <td align="center" id="courseID_4">4</td>
+                <td align="center" id="studentID_4">3</td>
+                <td align="center" id="gradeValue_4">A-</td>
+            </tr>
+        </table>
+        <p>&nbsp;</p>
+    </div>
+
+    <div id="insert" style="display:none;">
+        <form method="POST" id="addGrade">
+            <legend><strong>Add a new grade</strong></legend>
+            <fieldset class="fields">
+                <div><label> Course ID </label> <input type="text" name="course_id"></div>
+                <div><label> Student ID </label> <input type="text" name="student_id"></div>
+                <div><label> Grade Value </label> <input type="text" name="grade_value"></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Add Grade">
+            <input class="btn" type="button" value="Cancel" onClick="selectGrade()">
+        </form>
+    </div>
+
+    <div id="update" style="display:none;">
+        <form method="POST" id="updateGrade">
+            <legend><strong>Update Grade</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="gradeID" id="updateGradeID" value="">
+                <div><label> Course ID: </label> <input type="text" name="course_id" id="updateCourseID" value=""></div>
+                <div><label> Student ID: </label> <input type="text" name="student_id" id="updateStudentID" value=""></div>
+                <div><label> Grade Value </label> <input type="text" name="grade_value" id="updateGradeValue" value=""></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Save Update">
+            <input class="btn" type="button" value="Cancel" onClick="selectGrade()">
+        </form>
+    </div>
+
+    <div id="delete" style="display:none;">
+        <form method="POST" id="deleteGrade">
+            <legend><strong>Delete Grade</strong></legend>
+            <fieldset class="fields">
+                <p>Do you want to delete?</p>
+                <div><label><strong>Grade ID:</strong></label> <span id="deleteGradeID"></span></div>
+                <div><label> <strong>Value:</strong> </label> <span id="deleteGradeValue"></span></div>
+            </fieldset>
+            <input type="hidden" name="gradeID" id="deleteGradeIDInput" value="">
+            <input class="btn" type="submit" value="Delete Grade">
+            <input class="btn" type="button" value="Cancel" onClick="selectGrade()">
+        </form>
+    </div>
+</body>
 </html>
