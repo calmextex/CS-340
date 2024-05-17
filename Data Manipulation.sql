@@ -90,6 +90,15 @@ UPDATE Courses SET courseName = :courseNameInput, stateCourseCode = :stateCourse
 -- get all enrollments to populate the table on the view enrollments page
 SELECT * FROM Enrollments;
 
+-- Select enrollments with student names
+SELECT e.enrollmentID,
+       CONCAT(s.firstName, ' ', s.lastName) AS studentName,
+       e.enrollmentStartDate,
+       e.enrollmentEndDate
+FROM enrollments e
+JOIN students s ON e.studentID = s.studentID;
+
+
 -- add a new enrollment
 INSERT INTO Enrollments (studentID, enrollmentStartDate, enrollmentEndDate) VALUES (:studentIDDropdownInput, :enrollmentStartDateInput, :enrollmentEndDateInput);
 
@@ -106,6 +115,17 @@ UPDATE Enrollments SET studentID = :studentIDDropdownInput, enrollmentStartDate 
 -- get all course enrollments to populate the table on the view course enrollments page
 SELECT * FROM CourseEnrollments;
 
+-- Retrieve course enrollments with student names
+SELECT ce.enrollmentID, 
+       CONCAT(s.firstName, ' ', s.lastName) AS studentName,
+       c.courseName,
+       ce.courseStartDate,
+       ce.courseEndDate
+FROM course_enrollments ce
+JOIN students s ON ce.studentID = s.studentID
+JOIN courses c ON ce.courseID = c.courseID;
+
+
 -- add a new course enrollment
 INSERT INTO CourseEnrollments (enrollmentID, courseID, courseStartDate, courseEndDate) VALUES (:enrollmentIDDropdownInput, :courseIDDropdownInput, :courseStartDateInput, :courseEndDateInput);
 
@@ -121,6 +141,16 @@ UPDATE CourseEnrollments SET enrollmentID = :enrollmentIDDropdownInput, courseID
 ----- Grades -----
 -- get all grades to populate the table on the view grades page
 SELECT * FROM Grades;
+
+-- Select grades with student names and course names
+SELECT g.gradeID,
+       CONCAT(s.firstName, ' ', s.lastName) AS studentName,
+       c.courseName,
+       g.gradeValue
+FROM grades g
+JOIN students s ON g.studentID = s.studentID
+JOIN courses c ON g.courseID = c.courseID;
+
 
 -- add a new grade
 INSERT INTO Grades (courseID, studentID, gradeAssigned) VALUES (:courseIDDropdownInput, :studentIDDropdownInput, :gradeAssignedInput);
