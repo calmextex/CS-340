@@ -1,11 +1,11 @@
 //  Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || ;// please add PORT number here
+const PORT = process.env.PORT || 19134;// please add PORT number here
 
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');
-app.engine('.hbs', exphbs({ extname: '.hbs' }));
+app.engine('.hbs', engine({ extname: '.hbs' }));
 app.set('view engine', '.hbs');
 
 // database connection
@@ -14,7 +14,7 @@ const db = require('./database/db-connector');
 // app setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(_dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 
 // routes
 app.get('/', (req, res) => {
