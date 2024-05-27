@@ -1,0 +1,147 @@
+<script language="JavaScript">
+        function showForm(action) {
+            if (action == 'insert') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'block';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'update') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'block';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'delete') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'block';
+            } else { // by default display select
+                document.getElementById('select').style.display = 'block';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            }
+        }
+
+        function newEnrollment() { 
+            showForm('insert'); 
+        }
+
+        function updateEnrollment(id) { 
+            showForm('update');
+            var studentID = document.getElementById('studentID_' + id).innerText;
+            var enrollmentStartDate = document.getElementById('enrollmentStartDate_' + id).innerText;
+            var enrollmentEndDate = document.getElementById('enrollmentEndDate_' + id).innerText;
+
+            document.getElementById('updateEnrollmentID').value = id;
+            document.getElementById('updateEnrollmentIDDisplay').innerText = id;
+            document.getElementById('updateStudentID').value = studentID;
+            document.getElementById('updateEnrollmentStartDate').value = enrollmentStartDate;
+            document.getElementById('updateEnrollmentEndDate').value = enrollmentEndDate;
+        }
+
+        function deleteEnrollment(id) { 
+            showForm('delete');
+            document.getElementById('deleteEnrollmentID').innerText = id;
+        }
+
+        function selectEnrollment() { 
+            showForm('select'); 
+        }
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("enrollmentsTable");
+            tr = table.getElementsByTagName("tr");
+            
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="selectEnrollment()">
+    
+    <main>
+    <h2>Enrollments</h2>
+    <p></p>
+    
+    <div id="select">
+        <p><a href="#" onClick="newEnrollment()">New Enrollment</a></p>
+        <table id="enrollmentsTable" border="1" cellpadding="5">
+            <tr>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Enrollment ID</th>
+                <th>Student ID</th>
+                <th>Enrollment Start Date</th>
+                <th>Enrollment End Date</th>
+            </tr>
+            {{#each data}}
+            <tr>
+                <td><a href="#" onClick="updateEnrollment()">Edit</a></td>
+                <td><a href="#" onClick="deleteEnrollment()">Delete</a></td>
+                <td>{{this.enrollmentID}}</td>
+                <td>{{this.studentID}}</td>
+                <td>{{this.enrollmentStartDate}}</td>
+                <td>{{this.enrollmentEndDate}}</td>
+            </tr>
+            {{/each}}
+            <!-- Add more rows as needed -->
+        </table>
+        <p>&nbsp;</p>
+    </div>
+
+    <div id="insert" style="display:none;">
+        <form method="POST" id="addEnrollment">
+            <legend><strong>Add a new enrollment</strong></legend>
+            <fieldset class="fields">
+                <div><label> Student ID </label> <input type="text" name="student_id"></div>
+                <div><label> Enrollment Start Date </label> <input type="text" name="enrollment_start_date"></div>
+                <div><label> Enrollment End Date </label> <input type="text" name="enrollment_end_date"></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Add Enrollment">
+            <input class="btn" type="button" value="Cancel" onClick="selectEnrollment()">
+        </form>
+    </div>
+
+    <div id="update" style="display:none;">
+        <form method="POST" id="updateEnrollment">
+            <legend><strong>Update Enrollment</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="enrollmentID" id="updateEnrollmentID" value="">
+                <div><label> Enrollment ID: </label> <span id="updateEnrollmentIDDisplay"></span></div>
+                <div><label> Student ID </label> <input type="text" name="student_id" id="updateStudentID" value=""></div>
+                <div><label> Enrollment Start Date </label> <input type="text" name="enrollment_start_date" id="updateEnrollmentStartDate" value=""></div>
+                <div><label> Enrollment End Date </label> <input type="text" name="enrollment_end_date" id="updateEnrollmentEndDate" value=""></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Save Update">
+            <input class="btn" type="button" value="Cancel" onClick="selectEnrollment()">
+        </form>
+    </div>
+
+    <div id="delete" style="display:none;">
+        <form method="POST" id="deleteEnrollment">
+            <legend><strong>Delete Enrollment</strong></legend>
+            <fieldset class="fields">
+                <p>Do you want to delete?</p>
+                <div><label><strong>Enrollment ID:</strong></label> <span id="deleteEnrollmentID"></span></div>
+            </fieldset>
+            <input type="hidden" name="enrollmentID" id="deleteEnrollmentIDInput" value="">
+            <input class="btn" type="submit" value="Delete Enrollment">
+            <input class="btn" type="button" value="Cancel" onClick="selectEnrollment()">
+        </form>
+    </div>
+</main>
+</body>

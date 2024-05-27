@@ -1,1 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Student Information System</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='css/style.css'>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+        <link rel="mainfest" href="site.webmanifest">
+        <script language="JavaScript">
+        function showForm(action) {
+            if (action == 'insert') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'block';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'update') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'block';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'delete') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'block';
+            } else { // by default display select
+                document.getElementById('select').style.display = 'block';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            }
+        }
 
+        function newStudent() { 
+            showForm('insert'); 
+        }
+
+        function updateStudent(id) { 
+            showForm('update');
+            var firstName = document.getElementById('firstName_' + id).innerText;
+            var lastName = document.getElementById('lastName_' + id).innerText;
+            var dob = document.getElementById('dob_' + id).innerText;
+            var gradeLevel = document.getElementById('gradeLevel_' + id).innerText;
+            var entryDate = document.getElementById('entryDate_' + id).innerText;
+            var leaveDate = document.getElementById('leaveDate_' + id).innerText;
+            var email = document.getElementById('email_' + id).innerText;
+            var phoneNumber = document.getElementById('phoneNumber_' + id).innerText;
+            var address = document.getElementById('address_' + id).innerText;
+            var city = document.getElementById('city_' + id).innerText;
+            var state = document.getElementById('state_' + id).innerText;
+            var zipCode = document.getElementById('zipCode_' + id).innerText;
+            var parentGuardian = document.getElementById('parentGuardian_' + id).innerText;
+
+            document.getElementById('updateStudentID').value = id;
+            document.getElementById('updateStudentIDDisplay').innerText = id;
+            document.getElementById('updateFirstName').value = firstName;
+            document.getElementById('updateLastName').value = lastName;
+            document.getElementById('updateDOB').value = dob;
+            document.getElementById('updateGradeLevel').value = gradeLevel;
+            document.getElementById('updateEntryDate').value = entryDate;
+            document.getElementById('updateLeaveDate').value = leaveDate;
+            document.getElementById('updateEmail').value = email;
+            document.getElementById('updatePhoneNumber').value = phoneNumber;
+            document.getElementById('updateAddress').value = address;
+            document.getElementById('updateCity').value = city;
+            document.getElementById('updateState').value = state;
+            document.getElementById('updateZipCode').value = zipCode;
+            document.getElementById('updateParentGuardian').value = parentGuardian;
+        }
+
+        function deleteStudent(id, name) { 
+            showForm('delete');
+            document.getElementById('deleteStudentID').innerText = id;
+            document.getElementById('deleteStudentName').innerText = name;
+        }
+
+        function selectStudent() { 
+            showForm('select'); 
+        }
+
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("studentTable");
+            tr = table.getElementsByTagName("tr");
+            
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    </head>
+    <body onload="selectStudent()">
+        <main>
+            <body>
+        <p>This is a student information system.</p>
+            </body>
+        </main>
+<h2>Students</h2>
+    <p></p>
+    
+    <div id="select">
+        <p><a href="#" onClick="newStudent()">New Student</a></p>
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for students..">
+        <table id="studentTable" border="1" cellpadding="5">
+            <thead>
+            <tr>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Student ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>DOB</th>
+                <th>Grade Level</th>
+                <th>Entry Date</th>
+                <th>Leave Date</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip Code</th>
+                <th>Parent/Guardian</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each data}}
+            <tr data-value={{this.studentID}}>
+                <td><a href="#" onClick="updateStudent({{this.studentID}})">Edit</a></td>
+                <td><a href="#" onClick="deleteStudent({{this.studentID}})">Delete</a></td>
+            <td>{{this.studentID}}</td>
+            <td>{{this.firstName}}</td>
+            <td>{{this.lastName}}</td>
+            <td>{{this.dob}}</td>
+            <td>{{this.gradeLevel}}</td>
+            <td>{{this.entryDate}}</td>
+            <td>{{this.leaveDate}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.phoneNumber}}</td>
+            <td>{{this.address}}</td>
+            <td>{{this.city}}</td>
+            <td>{{this.state}}</td>
+            <td>{{this.zipCode}}</td>
+            <td>{{this.parentGuardian}}</td>
+            </tr>
+            {{/each}}
+            <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
+    </div>
+
+    <div id="insert" style="display:none;">
+        <form id="addStudent-form" method="POST" action="/addStudent-form">
+            <legend><strong>Add a new student</strong></legend>
+            <fieldset class="fields">
+                
+
+                <div><label for="first_name"> First Name </label> 
+                <input type="text" name="first_name" id="first_name"></div>
+
+                <div><label for="last_name"> Last Name </label>
+                <input type="text" name="last_name" id="last_name"></div>
+
+                <div><label for="dob"> DOB </label> 
+                <input type="date" name="dob" id="dob"></div>
+
+                <div><label for="garde_level"> Grade Level </label> 
+                <input type="text" name="grade_level" id="grade_level"></div>
+
+                <div><label for="entry_date"> Entry Date </label> 
+                <input type="date" name="entry_date" id="entry_date"></div>
+
+                <div><label for="leave_date"> Leave Date </label> 
+                <input type="date" name="leave_date" id="leave_date"></div>
+
+                <div><label for="email"> Email </label> 
+                <input type="text" name="email" id="email"></div>
+
+                <div><label for="phone_number"> Phone Number </label> 
+                <input type="text" name="phone_number" id="phone_number"></div>
+
+                <div><label for="address"> Address </label> 
+                <input type="text" name="address" id="address"></div>
+
+                <div><label for="city"> City </label> 
+                <input type="text" name="city" id="city"></div>
+
+                <div><label for="state"> State </label> 
+                <input type="text" name="state" id="state"></div>
+
+                <div><label for="zip_code"> Zip Code </label> 
+                <input type="text" name="zip_code" id="zip_code"></div>
+
+                <div><label for="parent_guardian"> Parent/Guardian </label> 
+                <input type="text" name="parent_guardian" id="parent_guardian"></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Add Student">
+            <input class="btn" type="button" value="Cancel" onClick="selectStudent()">
+        </form>
+    </div>
+
+    <div id="update" style="display:none;">
+        <form method="POST" id="updateStudent" action="/updateStudent">
+            <legend><strong>Update Student</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="studentID" id="updateStudentID" value="">
+                <div><label> Student ID: </label> <span id="updateStudentIDDisplay"></span></div>
+                <div><label> First Name </label> <input type="text" name="first_name" id="updateFirstName" value=""></div>
+                <div><label> Last Name </label> <input type="text" name="last_name" id="updateLastName" value=""></div>
+                <div><label> DOB </label> <input type="text" name="dob" id="updateDOB" value=""></div>
+                <div><label> Grade Level </label> <input type="text" name="grade_level" id="updateGradeLevel" value=""></div>
+                <div><label> Entry Date </label> <input type="text" name="entry_date" id="updateEntryDate" value=""></div>
+                <div><label> Leave Date </label> <input type="text" name="leave_date" id="updateLeaveDate" value=""></div>
+                <div><label> Email </label> <input type="text" name="email" id="updateEmail" value=""></div>
+                <div><label> Phone Number </label> <input type="text" name="phone_number" id="updatePhoneNumber" value=""></div>
+                <div><label> Address </label> <input type="text" name="address" id="updateAddress" value=""></div>
+                <div><label> City </label> <input type="text" name="city" id="updateCity" value=""></div>
+                <div><label> State </label> <input type="text" name="state" id="updateState" value=""></div>
+                <div><label> Zip Code </label> <input type="text" name="zip_code" id="updateZipCode" value=""></div>
+                <div><label> Parent/Guardian </label> <input type="text" name="parent_guardian" id="updateParentGuardian" value=""></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Save Update">
+            <input class="btn" type="button" value="Cancel" onClick="selectStudent()">
+        </form>
+    </div>
+
+    <div id="delete" style="display:none;">
+        <form method="POST" id="deleteStudent">
+            <legend><strong>Delete Student</strong></legend>
+            <fieldset class="fields">
+                <p>Do you want to delete?</p>
+                <div><label><strong>Student ID:</strong></label> <span id="deleteStudentID"></span></div>
+                <div><label> <strong>Name:</strong> </label> <span id="deleteStudentName"></span></div>
+            </fieldset>
+            <input type="hidden" name="studentID" id="deleteStudentIDInput" value="">
+            <input class="btn" type="submit" value="Delete Student">
+            <input class="btn" type="button" value="Cancel" onClick="selectStudent()">
+        </form>
+    </div>
+    </body>
+</html>

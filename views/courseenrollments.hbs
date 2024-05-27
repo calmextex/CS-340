@@ -1,0 +1,152 @@
+<script language="JavaScript">
+        function showForm(action) {
+            if (action == 'insert') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'block';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'update') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'block';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'delete') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'block';
+            } else { // by default display select
+                document.getElementById('select').style.display = 'block';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            }
+        }
+
+        function newCourseEnrollment() { 
+            showForm('insert'); 
+        }
+
+        function updateCourseEnrollment(id) { 
+            showForm('update');
+            var courseID = document.getElementById('courseID_' + id).innerText;
+            var studentID = document.getElementById('studentID_' + id).innerText;
+            var courseStartDate = document.getElementById('courseStartDate_' + id).innerText;
+            var courseEndDate = document.getElementById('courseEndDate_' + id).innerText;
+
+            document.getElementById('updateEnrollmentID').value = id;
+            document.getElementById('updateEnrollmentIDDisplay').innerText = id;
+            document.getElementById('updateCourseID').value = courseID;
+            document.getElementById('updateStudentID').value = studentID;
+            document.getElementById('updateCourseStartDate').value = courseStartDate;
+            document.getElementById('updateCourseEndDate').value = courseEndDate;
+        }
+
+        function deleteCourseEnrollment(id) { 
+            showForm('delete');
+            document.getElementById('deleteEnrollmentID').innerText = id;
+        }
+
+        function selectCourseEnrollment() { 
+            showForm('select'); 
+        }
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("courseEnrollmentTable");
+            tr = table.getElementsByTagName("tr");
+            
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="selectCourseEnrollment()">
+    <main>
+    <h2>Course Enrollments</h2>
+    <p></p>
+    
+    <div id="select">
+        <p><a href="#" onClick="newCourseEnrollment()">New Course Enrollment</a></p>
+        <table id="courseEnrollmentTable" border="1" cellpadding="5">
+            <tr>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Course ID</th>
+                <th>Student ID</th>
+                <th>Course Start Date</th>
+                <th>Course End Date</th>
+            </tr>
+                {{#each data}}
+            <tr>
+                <td><a href="#" onClick="updateCourseEnrollment()">Edit</a></td>
+                <td><a href="#" onClick="deleteCourseEnrollment()">Delete</a></td>
+                <td>{{this.enrollmentID}}</td>
+                <td>{{this.courseID}}</td>
+                <td>{{this.courseStartDate}}</td>
+                <td>{{this.courseEndDate}}</td>
+                
+            </tr>
+            {{/each}}
+        
+            <!-- Add more rows as needed -->
+        </table>
+        <p>&nbsp;</p>
+    </div>
+
+    <div id="insert" style="display:none;">
+        <form method="POST" id="addCourseEnrollment">
+            <legend><strong>Add a new course enrollment</strong></legend>
+            <fieldset class="fields">
+                <div><label> Course ID </label> <input type="text" name="course_id"></div>
+                <div><label> Student ID </label> <input type="text" name="student_id"></div>
+                <div><label> Course Start Date </label> <input type="text" name="course_start_date"></div>
+                <div><label> Course End Date </label> <input type="text" name="course_end_date"></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Add Enrollment">
+            <input class="btn" type="button" value="Cancel" onClick="selectCourseEnrollment()">
+        </form>
+    </div>
+
+    <div id="update" style="display:none;">
+        <form method="POST" id="updateCourseEnrollment">
+            <legend><strong>Update Course Enrollment</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="enrollmentID" id="updateEnrollmentID" value="">
+                <div><label> Enrollment ID: </label> <span id="updateEnrollmentIDDisplay"></span></div>
+                <div><label> Course ID </label> <input type="text" name="course_id" id="updateCourseID" value=""></div>
+                <div><label> Student ID </label> <input type="text" name="student_id" id="updateStudentID" value=""></div>
+                <div><label> Course Start Date </label> <input type="text" name="course_start_date" id="updateCourseStartDate" value=""></div>
+                <div><label> Course End Date </label> <input type="text" name="course_end_date" id="updateCourseEndDate" value=""></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Save Update">
+            <input class="btn" type="button" value="Cancel" onClick="selectCourseEnrollment()">
+        </form>
+    </div>
+
+    <div id="delete" style="display:none;">
+        <form method="POST" id="deleteCourseEnrollment">
+            <legend><strong>Delete Course Enrollment</strong></legend>
+            <fieldset class="fields">
+                <p>Do you want to delete?</p>
+                <div><label><strong>Enrollment ID:</strong></label> <span id="deleteEnrollmentID"></span></div>
+            </fieldset>
+            <input type="hidden" name="enrollmentID" id="deleteEnrollmentIDInput" value="">
+            <input class="btn" type="submit" value="Delete Enrollment">
+            <input class="btn" type="button" value="Cancel" onClick="selectCourseEnrollment()">
+        </form>
+    </div>
+</main>
+</body>
