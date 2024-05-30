@@ -101,7 +101,144 @@ app.put('/students/:id', (req, res) => {
         res.json({ message: 'updated', id: studentId });
     });
 });
+/** DELETE and PUT for other entities. Commented out for now. When merged, feel free to move around as needed.
 
+// update a state course code in the StateCourseCodes table
+app.put('/statecoursecodes/:stateCourseCode', (req, res) => {
+    const query = 'DELETE FROM StateCourseCodes WHERE stateCourseCode = ?';
+    db.pool.query(query, [req.params.stateCourseCode], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'deleted', stateCourseCode: req.params.stateCourseCode });
+    });
+});
+
+// delete a state course code from the StateCourseCodes table
+app.delete('/statecoursecodes/:stateCourseCode', (req, res) => {
+    const query = 'UPDATE StateCourseCodes SET stateCourseCode = ?';
+    db.pool.query(query, [req.params.stateCourseCode], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'updated', stateCourseCode: req.params.stateCourseCode });
+    });
+});
+
+// enrollment update
+app.put('/enrollments/:enrollmentID', (req, res) => {
+    const enrollmentID = req.params.enrollmentID;
+    const { studentID, enrollmentStartDate, enrollmentEndDate } = req.body;
+    const query = 'UPDATE Enrollments SET studentID = ?, enrollmentStartDate = ?, enrollmentEndDate = ? WHERE enrollmentID = ?';
+    db.pool.query(query, [studentID, enrollmentStartDate, enrollmentEndDate, enrollmentID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'updated', enrollmentID });
+    });
+});
+
+// enrollment delete
+app.delete('/enrollments/:enrollmentID', (req, res) => {
+    const query = 'DELETE FROM Enrollments WHERE enrollmentID = ?';
+    db.pool.query(query, [req.params.enrollmentID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'deleted', enrollmentID: req.params.enrollmentID });
+    });
+});
+
+// course update 
+
+app.put('/courses/:courseID', (req, res) => {
+    const courseID = req.params.courseID;
+    const { courseName, stateCourseCode } = req.body;
+    const query = 'UPDATE Courses SET courseName = ?, stateCourseCode = ? WHERE courseID = ?';
+    db.pool.query(query, [courseName, stateCourseCode, courseID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'updated', courseID });
+    });
+});
+
+
+// courses delete
+
+app.delete('/courses/:courseID', (req, res) => {
+    const query = 'DELETE FROM Courses WHERE courseID = ?';
+    db.pool.query(query, [req.params.courseID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'deleted', courseID: req.params.courseID });
+    });
+});
+
+// course enrollments update
+app.put('/courseenrollments/:enrollmentID/:courseID', (req, res) => {
+    const enrollmentID = req.params.enrollmentID;
+    const courseID = req.params.courseID;
+    const { enrollmentID: newEnrollmentID, courseID: newCourseID, courseStartDate, courseEndDate } = req.body;
+    const query = 'UPDATE CourseEnrollments SET enrollmentID = ?, courseID = ?, courseStartDate = ?, courseEndDate = ? WHERE enrollmentID = ? AND courseID = ?';
+    db.pool.query(query, [newEnrollmentID, newCourseID, courseStartDate, courseEndDate, enrollmentID, courseID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'updated', enrollmentID, courseID });
+    });
+});
+
+// course enrollments delete
+app.delete('/courseenrollments/:enrollmentID/:courseID', (req, res) => {
+    const query = 'DELETE FROM CourseEnrollments WHERE enrollmentID = ? AND courseID = ?';
+    db.pool.query(query, [req.params.enrollmentID, req.params.courseID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'deleted', enrollmentID: req.params.enrollmentID, courseID: req.params.courseID });
+    });
+});
+
+// grades update
+app.put('/grades/:courseID/:studentID', (req, res) => {
+    const courseID = req.params.courseID;
+    const studentID = req.params.studentID;
+    const { courseID: newCourseID, studentID: newStudentID, gradeAssigned } = req.body;
+    const query = 'UPDATE Grades SET courseID = ?, studentID = ?, gradeAssigned = ? WHERE courseID = ? AND studentID = ?';
+    db.pool.query(query, [newCourseID, newStudentID, gradeAssigned, courseID, studentID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'updated', courseID, studentID });
+    });
+});
+
+
+// grades delete
+
+app.delete('/grades/:courseID/:studentID', (req, res) => {
+    const query = 'DELETE FROM Grades WHERE courseID = ? AND studentID = ?';
+    db.pool.query(query, [req.params.courseID, req.params.studentID], (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'deleted', courseID: req.params.courseID, studentID: req.params.studentID });
+    });
+});
+
+*/
 
 app.listen(PORT, function(){
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.')
