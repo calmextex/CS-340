@@ -27,7 +27,7 @@ app.get('/students', function(req, res){
         res.render('students', {data: rows});
     })
 });
-
+//`INSERT INTO Enrollments (studentID) SELECT studentID FROM Students;`;
 app.get('/enrollments', function(req, res){
     let query = "SELECT * FROM Enrollments;";
     db.pool.query(query, (err, rows, fields) =>{
@@ -76,32 +76,163 @@ app.post('/addStudent-form', (req, res) => {
     })
 });
 
-// delete a student from the students table
-app.delete('/students/:id', (req, res) => {
-    const query = 'DELETE FROM Students WHERE id = ?';
-    db.pool.query(query, [req.params.id], (err, result) => {
+//add enrollment to enrollment table
+app.post('/addEnrollment-form', (req, res) => {
+    let data = req.body;
+    let query = `INSERT INTO Enrollments (enrollmentStartDate, enrollmentEndDate) VALUES ('${data['enrollment_start_date']}', '${data['enrollment_end_date']}');`;
+    db.pool.query(query, (err, rows, fields) => {
         if (err) {
             res.status(400).json({ error: err.message });
             return;
         }
-        res.json({ message: 'deleted', id: req.params.id });
-    });
+        res.redirect('/enrollments');
+    })
 });
 
-// update a student in the students table
-app.put('/students/:id', (req, res) => {
-    const studentId = req.params.id;
-    const { firstName, lastName, dob, gradeLevel, entryDate, leaveDate, email, phoneNumber, address, city, state, zipCode, parentGuardian } = req.body;
-    const query = 'UPDATE Students SET firstName = ?, lastName = ?, dob = ?, gradeLevel = ?, entryDate = ?, leaveDate = ?, email = ?, phoneNumber = ?, address = ?, city = ?, state = ?, zipCode = ?, parentGuardian = ? WHERE id = ?';
-    db.pool.query(query, [firstName, lastName, dob, gradeLevel, entryDate, leaveDate, email, phoneNumber, address, city, state, zipCode, parentGuardian, studentId], (err, result) => {
+//add ciourses
+app.post('/addCourse-form', (req, res) => {
+    let data = req.body;
+    let query = `INSERT INTO Courses (courseName, stateCourseCode) VALUES ('${data['course_name']}', '${data['course_code']}');`;
+    db.pool.query(query, (err, rows, fields) => {
         if (err) {
             res.status(400).json({ error: err.message });
             return;
         }
-        res.json({ message: 'updated', id: studentId });
-    });
+        res.redirect('/courses');
+    })
 });
-/** DELETE and PUT for other entities. Commented out for now. When merged, feel free to move around as needed.
+
+//add state course code
+app.post('/addStateCode-form', (req, res) => {
+    let data = req.body;
+    let query = `INSERT INTO StateCourseCodes (stateCourseCode, subject) VALUES ('${data['course_code_id']}', '${data['subject']}');`;
+    db.pool.query(query, (err, rows, fields) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.redirect('/statecoursecodes');
+    })
+});
+
+//
+app.post('/addCourseEnroll-form', (req, res) => {
+    let data = req.body;
+    let query = `INSERT INTO CourseEnrollments (courseID, enrollmentID, courseStartDate, courseEndDate) VALUES('${data['course_id']}', '${data['student_id']}', '${data['course_start_date']}', '${data['course_end_date']}');`;
+    db.pool.query(query, (err, rows, fields) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.redirect('/courseenrollments');
+    })
+});
+
+//
+app.post('/addGrades-form', (req, res) => {
+    let data = req.body;
+    let query = `INSERT INTO Grades (courseID, studentID, gradeAssigned) VALUES('${data['course_id']}', '${data['student_id']}', '${data['grade_value']}');`;
+    db.pool.query(query, (err, rows, fields) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.redirect('/grades');
+    })
+});
+// delete a student from the students table
+app.delete('/deleteStudent/:studentID', function(req,res,next){
+    console.log("HIIIII")
+    let query = `DELETE FROM Students WHERE studentID = ?`;
+          db.pool.query(query, [req.params.studentID], function(error, rows, fields){
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else {
+                res.sendStatus(204);
+            }
+    })
+});
+
+app.delete('/deleteCourseEnrollment/:enrollmentID', function(req,res,next){
+    console.log("HIIIII")
+    let query = `DELETE FROM CourseEnrollments WHERE enrollmentID = ?`;
+          db.pool.query(query, [req.params.enrollmentID], function(error, rows, fields){
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else {
+                res.sendStatus(204);
+            }
+    })
+});
+
+app.delete('/deleteCourse/:courseID', function(req,res,next){
+    let query = `DELETE FROM Courses WHERE courseID = ?`;
+          db.pool.query(query, [req.params.studentID], function(error, rows, fields){
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else {
+                res.sendStatus(204);
+            }
+    })
+});
+
+app.delete('/deleteEnrollment/:enrollmentID', function(req,res,next){
+    let query = `DELETE FROM Enrollments WHERE enrollmentID = ?`;
+          db.pool.query(query, [req.params.enrollmentID], function(error, rows, fields){
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else {
+                res.sendStatus(204);
+            }
+    })
+});
+
+app.delete('/deleteGrade/:courseID', function(req,res,next){
+    let query = `DELETE FROM Grades WHERE courseID = ?`;
+          db.pool.query(query, [req.params.courseID], function(error, rows, fields){
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else {
+                res.sendStatus(204);
+            }
+    })
+});
+
+app.delete('/deleteStateCourseCode/:stateCourseCode', function(req,res,next){
+    let query = `DELETE FROM StateCourseCodes WHERE stateCourseCode = ?`;
+          db.pool.query(query, [req.params.stateCourseCode], function(error, rows, fields){
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+            }
+            else {
+                res.sendStatus(204);
+            }
+    })
+});
+// update a student in the students table
+app.put('/updateStudent', (req, res) => {
+    let studentID = req.params.studentID;
+    let { firstName, lastName, dob, gradeLevel, entryDate, leaveDate, email, phoneNumber, address, city, state, zipCode, parentGuardian } = req.body;
+    const query = 'UPDATE Students SET firstName = ?, lastName = ?, dob = ?, gradeLevel = ?, entryDate = ?, leaveDate = ?, email = ?, phoneNumber = ?, address = ?, city = ?, state = ?, zipCode = ?, parentGuardian = ? WHERE studentID = ?';
+    db.pool.query(query, [firstName, lastName, dob, gradeLevel, entryDate, leaveDate, email, phoneNumber, address, city, state, zipCode, parentGuardian, studentID], (err, results, fields) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.redirect('/students');
+    })
+});
 
 // update a state course code in the StateCourseCodes table
 app.put('/statecoursecodes/:stateCourseCode', (req, res) => {
@@ -112,18 +243,6 @@ app.put('/statecoursecodes/:stateCourseCode', (req, res) => {
             return;
         }
         res.json({ message: 'deleted', stateCourseCode: req.params.stateCourseCode });
-    });
-});
-
-// delete a state course code from the StateCourseCodes table
-app.delete('/statecoursecodes/:stateCourseCode', (req, res) => {
-    const query = 'UPDATE StateCourseCodes SET stateCourseCode = ?';
-    db.pool.query(query, [req.params.stateCourseCode], (err, result) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.json({ message: 'updated', stateCourseCode: req.params.stateCourseCode });
     });
 });
 
@@ -141,20 +260,6 @@ app.put('/enrollments/:enrollmentID', (req, res) => {
     });
 });
 
-// enrollment delete
-app.delete('/enrollments/:enrollmentID', (req, res) => {
-    const query = 'DELETE FROM Enrollments WHERE enrollmentID = ?';
-    db.pool.query(query, [req.params.enrollmentID], (err, result) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.json({ message: 'deleted', enrollmentID: req.params.enrollmentID });
-    });
-});
-
-// course update 
-
 app.put('/courses/:courseID', (req, res) => {
     const courseID = req.params.courseID;
     const { courseName, stateCourseCode } = req.body;
@@ -165,20 +270,6 @@ app.put('/courses/:courseID', (req, res) => {
             return;
         }
         res.json({ message: 'updated', courseID });
-    });
-});
-
-
-// courses delete
-
-app.delete('/courses/:courseID', (req, res) => {
-    const query = 'DELETE FROM Courses WHERE courseID = ?';
-    db.pool.query(query, [req.params.courseID], (err, result) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.json({ message: 'deleted', courseID: req.params.courseID });
     });
 });
 
@@ -197,18 +288,6 @@ app.put('/courseenrollments/:enrollmentID/:courseID', (req, res) => {
     });
 });
 
-// course enrollments delete
-app.delete('/courseenrollments/:enrollmentID/:courseID', (req, res) => {
-    const query = 'DELETE FROM CourseEnrollments WHERE enrollmentID = ? AND courseID = ?';
-    db.pool.query(query, [req.params.enrollmentID, req.params.courseID], (err, result) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.json({ message: 'deleted', enrollmentID: req.params.enrollmentID, courseID: req.params.courseID });
-    });
-});
-
 // grades update
 app.put('/grades/:courseID/:studentID', (req, res) => {
     const courseID = req.params.courseID;
@@ -223,22 +302,6 @@ app.put('/grades/:courseID/:studentID', (req, res) => {
         res.json({ message: 'updated', courseID, studentID });
     });
 });
-
-
-// grades delete
-
-app.delete('/grades/:courseID/:studentID', (req, res) => {
-    const query = 'DELETE FROM Grades WHERE courseID = ? AND studentID = ?';
-    db.pool.query(query, [req.params.courseID, req.params.studentID], (err, result) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.json({ message: 'deleted', courseID: req.params.courseID, studentID: req.params.studentID });
-    });
-});
-
-*/
 
 app.listen(PORT, function(){
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.')
