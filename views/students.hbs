@@ -1,15 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Students</title>
-    <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <script language="JavaScript">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Student Information System</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='css/style.css'>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+        <link rel="mainfest" href="site.webmanifest">
+        <script language="JavaScript">
         function showForm(action) {
             if (action == 'insert') {
                 document.getElementById('select').style.display = 'none';
@@ -103,32 +103,21 @@
             }
         }
     </script>
-</head>
-<body onload="selectStudent()">
-    <header><img src="android-chrome-192x192 2.png"><h1>Student Information System</h1></header> 
-    <nav>
-        <a href="index.html">Home</a>
-        |
-        <a href="students.html">Students</a>
-        |
-        <a href="enrollments.html">Enrollments</a>
-        |
-        <a href="courses.html">Courses</a>
-        |
-        <a href="statecoursecodes.html">State Course Codes</a>
-        |
-        <a href="courseenrollments.html">Course Enrollments</a>
-        |
-        <a href="grades.html">Grades</a>
-    </nav>
-    <main>
-    <h2>Students</h2>
+    </head>
+    <body onload="selectStudent()">
+        <main>
+            <body>
+        <p>This is a student information system.</p>
+            </body>
+        </main>
+<h2>Students</h2>
     <p></p>
     
     <div id="select">
         <p><a href="#" onClick="newStudent()">New Student</a></p>
         <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for students..">
         <table id="studentTable" border="1" cellpadding="5">
+            <thead>
             <tr>
                 <th>Edit</th>
                 <th>Delete</th>
@@ -147,47 +136,78 @@
                 <th>Zip Code</th>
                 <th>Parent/Guardian</th>
             </tr>
-            <tr>
-                <td><a href="#" onClick="updateStudent('301')">Edit</a></td>
-                <td><a href="#" onClick="deleteStudent('301', 'John Doe')">Delete</a></td>
-                <td align="center">301</td>
-                <td align="center" id="firstName_301">John</td>
-                <td align="center" id="lastName_301">Doe</td>
-                <td align="center" id="dob_301">2001-05-15</td>
-                <td align="center" id="gradeLevel_301">12</td>
-                <td align="center" id="entryDate_301">2018-09-01</td>
-                <td align="center" id="leaveDate_301">2022-06-15</td>
-                <td align="center" id="email_301">john.doe@example.com</td>
-                <td align="center" id="phoneNumber_301">123-456-7890</td>
-                <td align="center" id="address_301">123 Main St</td>
-                <td align="center" id="city_301">Hometown</td>
-                <td align="center" id="state_301">CA</td>
-                <td align="center" id="zipCode_301">90210</td>
-                <td align="center" id="parentGuardian_301">Jane Doe</td>
+            </thead>
+            <tbody>
+            {{#each data}}
+            <tr data-value={{this.studentID}}>
+                <td><a href="#" onClick="updateStudent({{this.studentID}})">Edit</a></td>
+                <td><a href="#" onClick="deleteStudent({{this.studentID}})">Delete</a></td>
+            <td>{{this.studentID}}</td>
+            <td>{{this.firstName}}</td>
+            <td>{{this.lastName}}</td>
+            <td>{{this.dob}}</td>
+            <td>{{this.gradeLevel}}</td>
+            <td>{{this.entryDate}}</td>
+            <td>{{this.leaveDate}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.phoneNumber}}</td>
+            <td>{{this.address}}</td>
+            <td>{{this.city}}</td>
+            <td>{{this.state}}</td>
+            <td>{{this.zipCode}}</td>
+            <td>{{this.parentGuardian}}</td>
             </tr>
+            {{/each}}
             <!-- Add more rows as needed -->
+            </tbody>
         </table>
         <p>&nbsp;</p>
     </div>
 
     <div id="insert" style="display:none;">
-        <form method="POST" id="addStudent">
+        <form id="addStudent-form" method="POST" action="/addStudent-form">
             <legend><strong>Add a new student</strong></legend>
             <fieldset class="fields">
-                <div><label> Student ID </label> <input type="text" name="student_id"></div>
-                <div><label> First Name </label> <input type="text" name="first_name"></div>
-                <div><label> Last Name </label> <input type="text" name="last_name"></div>
-                <div><label> DOB </label> <input type="text" name="dob"></div>
-                <div><label> Grade Level </label> <input type="text" name="grade_level"></div>
-                <div><label> Entry Date </label> <input type="text" name="entry_date"></div>
-                <div><label> Leave Date </label> <input type="text" name="leave_date"></div>
-                <div><label> Email </label> <input type="text" name="email"></div>
-                <div><label> Phone Number </label> <input type="text" name="phone_number"></div>
-                <div><label> Address </label> <input type="text" name="address"></div>
-                <div><label> City </label> <input type="text" name="city"></div>
-                <div><label> State </label> <input type="text" name="state"></div>
-                <div><label> Zip Code </label> <input type="text" name="zip_code"></div>
-                <div><label> Parent/Guardian </label> <input type="text" name="parent_guardian"></div>
+                
+
+                <div><label for="first_name"> First Name </label> 
+                <input type="text" name="first_name" id="first_name"></div>
+
+                <div><label for="last_name"> Last Name </label>
+                <input type="text" name="last_name" id="last_name"></div>
+
+                <div><label for="dob"> DOB </label> 
+                <input type="date" name="dob" id="dob"></div>
+
+                <div><label for="garde_level"> Grade Level </label> 
+                <input type="text" name="grade_level" id="grade_level"></div>
+
+                <div><label for="entry_date"> Entry Date </label> 
+                <input type="date" name="entry_date" id="entry_date"></div>
+
+                <div><label for="leave_date"> Leave Date </label> 
+                <input type="date" name="leave_date" id="leave_date"></div>
+
+                <div><label for="email"> Email </label> 
+                <input type="text" name="email" id="email"></div>
+
+                <div><label for="phone_number"> Phone Number </label> 
+                <input type="text" name="phone_number" id="phone_number"></div>
+
+                <div><label for="address"> Address </label> 
+                <input type="text" name="address" id="address"></div>
+
+                <div><label for="city"> City </label> 
+                <input type="text" name="city" id="city"></div>
+
+                <div><label for="state"> State </label> 
+                <input type="text" name="state" id="state"></div>
+
+                <div><label for="zip_code"> Zip Code </label> 
+                <input type="text" name="zip_code" id="zip_code"></div>
+
+                <div><label for="parent_guardian"> Parent/Guardian </label> 
+                <input type="text" name="parent_guardian" id="parent_guardian"></div>
             </fieldset>
             <input class="btn" type="submit" value="Add Student">
             <input class="btn" type="button" value="Cancel" onClick="selectStudent()">
@@ -195,7 +215,7 @@
     </div>
 
     <div id="update" style="display:none;">
-        <form method="POST" id="updateStudent">
+        <form method="POST" id="updateStudent" action="/updateStudent">
             <legend><strong>Update Student</strong></legend>
             <fieldset class="fields">
                 <input type="hidden" name="studentID" id="updateStudentID" value="">
@@ -220,7 +240,7 @@
     </div>
 
     <div id="delete" style="display:none;">
-        <form method="POST" id="deleteStudent">
+        <form method="POST" id="deleteStudent" action="/deleteStudent">
             <legend><strong>Delete Student</strong></legend>
             <fieldset class="fields">
                 <p>Do you want to delete?</p>
@@ -232,9 +252,5 @@
             <input class="btn" type="button" value="Cancel" onClick="selectStudent()">
         </form>
     </div>
-    </main>
-    <footer>
-        <p>&copy;2024 Team 59 : Mikaella Shelby & Abraham Zamora</p>
-    </footer>
-</body>
+    </body>
 </html>

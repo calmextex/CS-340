@@ -1,0 +1,143 @@
+<script language="JavaScript">
+        function showForm(action) {
+            if (action == 'insert') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'block';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'update') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'block';
+                document.getElementById('delete').style.display = 'none';
+            } else if (action == 'delete') {
+                document.getElementById('select').style.display = 'none';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'block';
+            } else { // by default display select
+                document.getElementById('select').style.display = 'block';
+                document.getElementById('insert').style.display = 'none';
+                document.getElementById('update').style.display = 'none';
+                document.getElementById('delete').style.display = 'none';
+            }
+        }
+
+        function newCourse() { 
+            showForm('insert'); 
+        }
+
+        function updateCourse(id) { 
+            showForm('update');
+            var courseName = document.getElementById('courseName_' + id).innerText;
+            var courseCode = document.getElementById('courseCode_' + id).innerText;
+
+            document.getElementById('updateCourseID').value = id;
+            document.getElementById('updateCourseIDDisplay').innerText = id;
+            document.getElementById('updateCourseName').value = courseName;
+            document.getElementById('updateCourseCode').value = courseCode;
+        }
+
+        function deleteCourse(id, name) { 
+            showForm('delete');
+            document.getElementById('deleteCourseID').innerText = id;
+            document.getElementById('deleteCourseName').innerText = name;
+        }
+
+        function selectCourse() { 
+            showForm('select'); 
+        }
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("coursesTable");
+            tr = table.getElementsByTagName("tr");
+            
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="selectCourse()">
+    <main>
+    <h2>Courses</h2>
+    <p></p>
+    
+    <div id="select">
+        <p><a href="#" onClick="newCourse()">New Course</a></p>
+        <table id="coursesTable" border="1" cellpadding="5">
+            <tr>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Course Code</th>
+            </tr>
+            {{#each data}}
+            <tr>
+                <td><a href="#" onClick="updateCourse()">Edit</a></td>
+                <td><a href="#" onClick="deleteCourse()">Delete</a></td>
+                <td>{{this.courseID}}</td>
+                <td>{{this.courseName}}</td>
+                <td>{{this.stateCourseCode}}</td>
+            </tr>
+            {{/each}}
+            <!-- Add more rows as needed -->
+        </table>
+        <p>&nbsp;</p>
+    </div>
+
+    <div id="insert" style="display:none;">
+        <form method="POST" id="addCourse">
+            <legend><strong>Add a new course</strong></legend>
+            <fieldset class="fields">
+                <div><label> Course ID </label> <input type="text" name="course_id"></div>
+                <div><label> Course Name </label> <input type="text" name="course_name"></div>
+                <div><label> Course Code </label> <input type="text" name="course_code"></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Add Course">
+            <input class="btn" type="button" value="Cancel" onClick="selectCourse()">
+        </form>
+    </div>
+
+    <div id="update" style="display:none;">
+        <form method="POST" id="updateCourse">
+            <legend><strong>Update Course</strong></legend>
+            <fieldset class="fields">
+                <input type="hidden" name="courseID" id="updateCourseID" value="">
+                <div><label> Course ID: </label> <span id="updateCourseIDDisplay"></span></div>
+                <div><label> Course Name </label> <input type="text" name="course_name" id="updateCourseName" value=""></div>
+                <div><label> Course Code </label> <input type="text" name="course_code" id="updateCourseCode" value=""></div>
+            </fieldset>
+            <input class="btn" type="submit" value="Save Update">
+            <input class="btn" type="button" value="Cancel" onClick="selectCourse()">
+        </form>
+    </div>
+
+    <div id="delete" style="display:none;">
+        <form method="POST" id="deleteCourse">
+            <legend><strong>Delete Course</strong></legend>
+            <fieldset class="fields">
+                <p>Do you want to delete?</p>
+                <div><label><strong>Course ID:</strong></label> <span id="deleteCourseID"></span></div>
+                <div><label> <strong>Name:</strong> </label> <span id="deleteCourseName"></span></div>
+            </fieldset>
+            <input type="hidden" name="courseID" id="deleteCourseIDInput" value="">
+            <input class="btn" type="submit" value="Delete Course">
+            <input class="btn" type="button" value="Cancel" onClick="selectCourse()">
+        </form>
+    </div>
+    </main>
+</body>
