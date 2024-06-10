@@ -1,4 +1,4 @@
-// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app. Modified for course enrollment delete.
 function deleteCourseEnrollment(enrollmentID) {
     console.log(enrollmentID)
     const data = {id: enrollmentID}

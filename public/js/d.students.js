@@ -1,4 +1,4 @@
-// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app. Modified for students delete.
 function deleteStudent(studentID) {
     console.log(studentID)
     const data = {id: studentID}

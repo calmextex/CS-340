@@ -1,4 +1,4 @@
-// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+// Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app. Modified for use with StateCourseCodes delete.
 function deleteStateCourseCode(stateCourseCode) {
     const data = {id: stateCourseCode}
   

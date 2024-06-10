@@ -1,4 +1,5 @@
 //  Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+// Added the update and delete routes for other tables.  All are modeled after the original get, update, and delete for students, but modified for each entity.
 var express = require('express');
 var app = express();
 
@@ -89,7 +90,7 @@ app.post('/addEnrollment-form', (req, res) => {
     })
 });
 
-//add ciourses
+//add courses
 app.post('/addCourse-form', (req, res) => {
     let data = req.body;
     let query = `INSERT INTO Courses (courseName, stateCourseCode) VALUES ('${data['course_name']}', '${data['course_code']}');`;

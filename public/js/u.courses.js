@@ -1,4 +1,4 @@
-// Get the objects we need to modify
+// Get the objects we need to modify. Based on the u.students.js file but refocused for courses.
 let updateCourseForm = document.getElementById('updateCourse');
 
 // Modify the objects we need
