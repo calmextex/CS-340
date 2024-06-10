@@ -1,4 +1,7 @@
-//  Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+// # Citation for project
+// # Adapted from starter app code provided by CS340 class.
+//# Code Modified to better reflect the needs of the project.
+//# Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 // Added the update and delete routes for other tables.  All are modeled after the original get, update, and delete for students, but modified for each entity.
 var express = require('express');
 var app = express();
