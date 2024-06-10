@@ -3,6 +3,9 @@
 //# Code Modified to better reflect the needs of the project.
 //# Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 // Added the update and delete routes for other tables.  All are modeled after the original get, update, and delete for students, but modified for each entity.
+// For adding DOM Event Listeners in HBS files and the Endpoints added to the App.JS, used W3Schools to better understand fetching and event listeners.
+// Source URL: https://www.w3schools.com/js/js_api_fetch.asp?ref=buildwithnode.com
+// Date Retrieved: 6/10/2024
 var express = require('express');
 var app = express();
 
