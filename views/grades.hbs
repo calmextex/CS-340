@@ -1,4 +1,27 @@
 <script language="JavaScript">
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/get_student_ids')
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(document.getElementById('insertStudentID'), data.studentIDs);
+            });
+
+        fetch('/get_course_ids')
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(document.getElementById('insertCourseID'), data.courseIDs);
+            });
+
+        function populateDropdown(selectElement, dataArray) {
+            selectElement.innerHTML = '';
+            dataArray.forEach(function(id) {
+                var option = document.createElement('option');
+                option.value = id;
+                option.text = id;
+                selectElement.appendChild(option);
+                });
+            }
+        });
         function viewForm(action) {
             if (action == 'insert') {
                 document.getElementById('select').style.display = 'none';
@@ -103,8 +126,12 @@
         <form method="POST" id="addGrade">
             <legend><strong>Add a new grade</strong></legend>
             <fieldset class="fields">
-                <div><label> Course ID </label> <input type="text" name="course_id"></div>
-                <div><label> Student ID </label> <input type="text" name="student_id"></div>
+                <div><label> Course ID </label>
+                    <select name="course_id" id="insertCourseID"></select>
+                </div>
+                <div><label> Student ID </label>
+                    <select name="student_id" id="insertStudentID"></select>
+                </div>
                 <div><label> Grade Value </label> <input type="text" name="grade_value"></div>
             </fieldset>
             <input class="btn" type="submit" value="Add Grade">

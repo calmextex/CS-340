@@ -307,6 +307,46 @@ app.put('/grades/:courseID/:studentID', (req, res) => {
     });
 });
 
+// Endpoint to get StudentIDs for Enrollments and Grades dropdown
+app.get('/get_student_ids', (req, res) => {
+    let query = 'SELECT studentID FROM Students';
+    db.pool.query(query, (err, results) => {
+        if (err) throw err;
+        const studentIDs = results.map(row => row.studentID);
+        res.json({ studentIDs });
+    });
+});
+
+// Endpoint to get CourseIDs for use in dropdown dropdown
+app.get('/get_course_ids', (req, res) => {
+    let query = 'SELECT courseID FROM Courses';
+    db.pool.query(query, (err, results) => {
+        if (err) throw err;
+        const courseIDs = results.map(row => row.courseID);
+        res.json({ courseIDs });
+    });
+});
+
+// Endpoint to get EnrollmentIDs for use in CourseEnrollments dropdown
+app.get('/get_enrollment_ids', (req, res) => {
+    let query = 'SELECT enrollmentID FROM Enrollments';
+    db.pool.query(query, (err, results) => {
+        if (err) throw err;
+        const enrollmentIDs = results.map(row => row.enrollmentID);
+        res.json({ enrollmentIDs });
+    });
+});
+
+// Endpoint to get StateCourseCodes for Courses dropdown
+app.get('/get_state_course_codes', (req, res) => {
+    let query = 'SELECT stateCourseCode FROM StateCourseCodes';
+    db.pool.query(query, (err, results) => {
+        if (err) throw err;
+        const stateCourseCodes = results.map(row => row.stateCourseCode);
+        res.json({ stateCourseCodes });
+    });
+});
+
 app.listen(PORT, function(){
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.')
 });

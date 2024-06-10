@@ -1,4 +1,21 @@
 <script language="JavaScript">
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/get_student_ids')
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(document.getElementById('insertStudentID'), data.studentIDs);
+            });
+
+        function populateDropdown(selectElement, dataArray) {
+            selectElement.innerHTML = '';
+            dataArray.forEach(function(id) {
+                var option = document.createElement('option');
+                option.value = id;
+                option.text = id;
+                selectElement.appendChild(option);
+            });
+        }
+    });
         function showForm(action) {
             if (action == 'insert') {
                 document.getElementById('select').style.display = 'none';
@@ -107,7 +124,9 @@
         <form method="POST" id="addEnrollment">
             <legend><strong>Add a new enrollment</strong></legend>
             <fieldset class="fields">
-                <div><label> Student ID </label> <input type="text" name="student_id"></div>
+                <div><label> Student ID </label>
+                    <select name="student_id" id="insertStudentID"></select>
+                </div>
                 <div><label> Enrollment Start Date </label> <input type="text" name="enrollment_start_date"></div>
                 <div><label> Enrollment End Date </label> <input type="text" name="enrollment_end_date"></div>
             </fieldset>

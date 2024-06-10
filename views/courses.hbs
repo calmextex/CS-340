@@ -1,4 +1,21 @@
 <script language="JavaScript">
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/get_state_course_codes')
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(document.getElementById('insertStateCourseCode'), data.stateCourseCodes);
+            });
+
+        function populateDropdown(selectElement, dataArray) {
+            selectElement.innerHTML = '';
+            dataArray.forEach(function(code) {
+                var option = document.createElement('option');
+                option.value = code;
+                option.text = code;
+                selectElement.appendChild(option);
+                });
+            }
+        });
         function showForm(action) {
             if (action == 'insert') {
                 document.getElementById('select').style.display = 'none';
@@ -105,7 +122,9 @@
             <fieldset class="fields">
                 <div><label> Course ID </label> <input type="text" name="course_id"></div>
                 <div><label> Course Name </label> <input type="text" name="course_name"></div>
-                <div><label> Course Code </label> <input type="text" name="course_code"></div>
+                <div><label> State Course Code </label>
+                        <select name="state_course_code" id="insertStateCourseCode"></select>
+                    </div>
             </fieldset>
             <input class="btn" type="submit" value="Add Course">
             <input class="btn" type="button" value="Cancel" onClick="selectCourse()">
@@ -119,7 +138,7 @@
                 <input type="hidden" name="courseID" id="updateCourseID" value="">
                 <div><label> Course ID: </label> <span id="updateCourseIDDisplay"></span></div>
                 <div><label> Course Name </label> <input type="text" name="course_name" id="updateCourseName" value=""></div>
-                <div><label> Course Code </label> <input type="text" name="course_code" id="updateCourseCode" value=""></div>
+                <div><label> State Course Code </label> <input type="text" name="course_code" id="updateCourseCode" value=""></div>
             </fieldset>
             <input class="btn" type="submit" value="Save Update">
             <input class="btn" type="button" value="Cancel" onClick="selectCourse()">
