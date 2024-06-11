@@ -161,6 +161,7 @@
             <!-- Add more rows as needed -->
             </tbody>
         </table>
+        <script src="/js/d.students.js"></script>
         <p>&nbsp;</p>
     </div>
 
@@ -168,7 +169,6 @@
         <form id="addStudent-form" method="POST" action="/addStudent-form">
             <legend><strong>Add a new student</strong></legend>
             <fieldset class="fields">
-                
 
                 <div><label for="first_name"> First Name </label> 
                 <input type="text" name="first_name" id="first_name"></div>
@@ -218,7 +218,14 @@
         <form method="POST" id="updateStudent" action="/updateStudent">
             <legend><strong>Update Student</strong></legend>
             <fieldset class="fields">
-                <input type="hidden" name="studentID" id="updateStudentID" value="">
+                <div><label for="studentID"> Student ID: </label> 
+                <select name="inputStudent" id="inputStudent-dd">
+                    <option value=""> </option>
+                    {{#each sid}}
+                    <option value="{{this.studentID}}">{{this.studentID}}</option>
+                    {{/each}}
+                </select>
+                </div>
                 <div><label> First Name </label> <input type="text" name="first_name" id="updateFirstName" value=""></div>
                 <div><label> Last Name </label> <input type="text" name="last_name" id="updateLastName" value=""></div>
                 <div><label> DOB </label> <input type="text" name="dob" id="updateDOB" value=""></div>
@@ -236,20 +243,7 @@
             <input class="btn" type="submit" value="Save Update">
             <input class="btn" type="button" value="Cancel" onClick="selectStudent()">
         </form>
-    </div>
-
-    <div id="delete" style="display:none;">
-        <form method="POST" id="deleteStudent" action="/deleteStudent">
-            <legend><strong>Delete Student</strong></legend>
-            <fieldset class="fields">
-                <p>Do you want to delete?</p>
-                <div><label><strong>Student ID:</strong></label> <span id="deleteStudentID"></span></div>
-                <div><label> <strong>Name:</strong> </label> <span id="deleteStudentName"></span></div>
-            </fieldset>
-            <input type="hidden" name="studentID" id="deleteStudentIDInput" value="">
-            <input class="btn" type="submit" value="Delete Student">
-            <input class="btn" type="button" value="Cancel" onClick="selectStudent()">
-        </form>
+        <script src="/js/u.students.js"></script>
     </div>
     </body>
 </html>
