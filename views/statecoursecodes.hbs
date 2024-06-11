@@ -27,21 +27,6 @@
             showForm('insert'); 
         }
 
-        function updateStateCourseCode(id) { 
-            showForm('update');
-            var courseValue = document.getElementById('courseValue_' + id).innerText;
-
-            document.getElementById('updateCourseCodeID').value = id;
-            document.getElementById('updateCourseCodeIDDisplay').innerText = id;
-            document.getElementById('updateCourseValue').value = courseValue;
-        }
-
-        function deleteStateCourseCode(id, code) { 
-            showForm('delete');
-            document.getElementById('deleteCourseCodeID').innerText = id;
-            document.getElementById('deleteCourseCodeValue').innerText = code;
-        }
-
         function selectStateCourseCode() { 
             showForm('select'); 
         }
@@ -77,61 +62,38 @@
         <p><a href="#" onClick="newStateCourseCode()">New State Course Code</a></p>
         <table id="courseCodeTable" border="1" cellpadding="5">
             <tr>
-                <th>Edit</th>
                 <th>Delete</th>
                 <th>Course Code ID</th>
                 <th>Subject</th>
+                
             </tr>
             {{#each data}}
-            <tr>
-                <td><a href="#" onClick="updateStateCourseCode()">Edit</a></td>
-                <td><a href="#" onClick="deleteStateCourseCode()">Delete</a></td>
+            <tr data-value={{this.stateCourseCode}}>
+                <td><a href="#" onClick="deleteStateCourseCode({{this.stateCourseCode}})">Delete</a></td>
                 <td>{{this.stateCourseCode}}</td>
                 <td>{{this.subject}}</td>
             </tr>
             {{/each}}
             <!-- Add more rows as needed -->
         </table>
+        <script src="/js/d.statecoursecodes.js"></script>
         <p>&nbsp;</p>
     </div>
 
     <div id="insert" style="display:none;">
-        <form method="POST" id="addCourseCode">
+        <form method="POST" id="addStateCode-form" action="/addStateCode-form">
             <legend><strong>Add a new state course code</strong></legend>
             <fieldset class="fields">
-                <div><label> Course Code ID </label> <input type="text" name="course_code_id"></div>
-                <div><label> Subject </label> <input type="text" name="subject"></div>
+                <div><label for="course_code_id"> Course Code ID </label> 
+                <input type="text" name="course_code_id" id="course_code_id"></div>
+
+                <div><label for="subject"> Subject </label> 
+                <input type="text" name="subject" id="subject"></div>
             </fieldset>
             <input class="btn" type="submit" value="Add Course Code">
             <input class="btn" type="button" value="Cancel" onClick="selectStateCourseCode()">
         </form>
     </div>
 
-    <div id="update" style="display:none;">
-        <form method="POST" id="updateCourseCode">
-            <legend><strong>Update State Course Code</strong></legend>
-            <fieldset class="fields">
-                <input type="hidden" name="courseCodeID" id="updateCourseCodeID" value="">
-                <div><label> Course Code ID: </label> <span id="updateCourseCodeIDDisplay"></span></div>
-                <div><label> Subject </label> <input type="text" name="subject" id="updateCourseValue" value=""></div>
-            </fieldset>
-            <input class="btn" type="submit" value="Save Update">
-            <input class="btn" type="button" value="Cancel" onClick="selectStateCourseCode()">
-        </form>
-    </div>
-
-    <div id="delete" style="display:none;">
-        <form method="POST" id="deleteCourseCode">
-            <legend><strong>Delete State Course Code</strong></legend>
-            <fieldset class="fields">
-                <p>Do you want to delete?</p>
-                <div><label><strong>Course Code ID:</strong></label> <span id="deleteCourseCodeID"></span></div>
-                <div><label> <strong>Subject:</strong> </label> <span id="deleteCourseCodeValue"></span></div>
-            </fieldset>
-            <input type="hidden" name="courseCodeID" id="deleteCourseCodeIDInput" value="">
-            <input class="btn" type="submit" value="Delete Course Code">
-            <input class="btn" type="button" value="Cancel" onClick="selectStateCourseCode()">
-        </form>
-    </div>
 </main>
 </body>
