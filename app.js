@@ -29,9 +29,14 @@ app.get('/', function(req, res){
 });
 
 app.get('/students', function(req, res){
-    let query = "SELECT * FROM Students;";
+    let query1;
+    if(req.query.lastName === undefined){
+        query1 = "SELECT * FROM Students;"; 
+    }else{
+        query1 = `SELECT * FROM Students WHERE lastName LIKE "${req.query.lastName}%"`
+    }
     db.pool.query(query, (err, rows, fields) =>{
-        res.render('students', {data: rows});
+        return res.render('students', {data: rows});
     })
 });
 //`INSERT INTO Enrollments (studentID) SELECT studentID FROM Students;`;
@@ -138,7 +143,7 @@ app.post('/addCourseEnroll-form', (req, res) => {
 //
 app.post('/addGrades-form', (req, res) => {
     let data = req.body;
-    let query = `INSERT INTO Grades (courseID, studentID, gradeAssigned) VALUES('${data['course_id']}', '${data['student_id']}', '${data['grade_value']}');`;
+    let query = `INSERT INTO Grades (gradeAssigned) VALUES('${data['grade_value']}');`;
     db.pool.query(query, (err, rows, fields) => {
         if (err) {
             res.status(400).json({ error: err.message });
@@ -178,7 +183,7 @@ app.delete('/deleteCourseEnrollment/:enrollmentID', function(req,res,next){
 
 app.delete('/deleteCourse/:courseID', function(req,res,next){
     let query = `DELETE FROM Courses WHERE courseID = ?`;
-          db.pool.query(query, [req.params.studentID], function(error, rows, fields){
+          db.pool.query(query, [req.params.courseID], function(error, rows, fields){
             if (error) {
                 console.log(error);
                 res.sendStatus(400);
@@ -231,7 +236,7 @@ app.delete('/deleteStateCourseCode/:stateCourseCode', function(req,res,next){
 app.put('/updateStudent', (req, res) => {
     let studentID = req.params.studentID;
     let { firstName, lastName, dob, gradeLevel, entryDate, leaveDate, email, phoneNumber, address, city, state, zipCode, parentGuardian } = req.body;
-    const query = 'UPDATE Students SET firstName = ?, lastName = ?, dob = ?, gradeLevel = ?, entryDate = ?, leaveDate = ?, email = ?, phoneNumber = ?, address = ?, city = ?, state = ?, zipCode = ?, parentGuardian = ? WHERE studentID = ?';
+    const query = `UPDATE Students SET firstName = ?, lastName = ?, dob = ?, gradeLevel = ?, entryDate = ?, leaveDate = ?, email = ?, phoneNumber = ?, address = ?, city = ?, state = ?, zipCode = ?, parentGuardian = ? WHERE studentID = ?`;
     db.pool.query(query, [firstName, lastName, dob, gradeLevel, entryDate, leaveDate, email, phoneNumber, address, city, state, zipCode, parentGuardian, studentID], (err, results, fields) => {
         if (err) {
             res.status(400).json({ error: err.message });
@@ -241,23 +246,20 @@ app.put('/updateStudent', (req, res) => {
     })
 });
 
-// update a state course code in the StateCourseCodes table
-app.put('/statecoursecodes/:stateCourseCode', (req, res) => {
-    const query = 'DELETE FROM StateCourseCodes WHERE stateCourseCode = ?';
-    db.pool.query(query, [req.params.stateCourseCode], (err, result) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.json({ message: 'deleted', stateCourseCode: req.params.stateCourseCode });
-    });
-});
-
 // enrollment update
-app.put('/enrollments/:enrollmentID', (req, res) => {
+app.put('/updateEnrollments/:enrollmentID', (req, res) => {
     const enrollmentID = req.params.enrollmentID;
     const { studentID, enrollmentStartDate, enrollmentEndDate } = req.body;
-    const query = 'UPDATE Enrollments SET studentID = ?, enrollmentStartDate = ?, enrollmentEndDate = ? WHERE enrollmentID = ?';
+    let q1 = `SELECT studentID FROM Students;`;
+    let q2 = `SELECT * FROM Enrollments;`;
+    db.pool.query(q1, function(error, rows, fields){
+        let studentID = rows;
+        db.pool.query(q2, (error, rows, fields) =>{
+            let IDS = rows;
+            return res.render('/updateEnrollments', {data: studentID, IDS: IDS});
+        })
+    })
+    const query = 'UPDATE Enrollments SET studentID = ?, enrollmentStartDate = ?, enrollmentEndDate = ? WHERE enrollmentID = ?;';
     db.pool.query(query, [studentID, enrollmentStartDate, enrollmentEndDate, enrollmentID], (err, result) => {
         if (err) {
             res.status(400).json({ error: err.message });
@@ -270,7 +272,7 @@ app.put('/enrollments/:enrollmentID', (req, res) => {
 app.put('/courses/:courseID', (req, res) => {
     const courseID = req.params.courseID;
     const { courseName, stateCourseCode } = req.body;
-    const query = 'UPDATE Courses SET courseName = ?, stateCourseCode = ? WHERE courseID = ?';
+    const query = 'UPDATE Courses SET courseName = ?, stateCourseCode = ? WHERE courseID = ?;';
     db.pool.query(query, [courseName, stateCourseCode, courseID], (err, result) => {
         if (err) {
             res.status(400).json({ error: err.message });
@@ -285,7 +287,7 @@ app.put('/courseenrollments/:enrollmentID/:courseID', (req, res) => {
     const enrollmentID = req.params.enrollmentID;
     const courseID = req.params.courseID;
     const { enrollmentID: newEnrollmentID, courseID: newCourseID, courseStartDate, courseEndDate } = req.body;
-    const query = 'UPDATE CourseEnrollments SET enrollmentID = ?, courseID = ?, courseStartDate = ?, courseEndDate = ? WHERE enrollmentID = ? AND courseID = ?';
+    const query = 'UPDATE CourseEnrollments SET enrollmentID = ?, courseID = ?, courseStartDate = ?, courseEndDate = ? WHERE enrollmentID = ? AND courseID = ?;';
     db.pool.query(query, [newEnrollmentID, newCourseID, courseStartDate, courseEndDate, enrollmentID, courseID], (err, result) => {
         if (err) {
             res.status(400).json({ error: err.message });
@@ -300,7 +302,7 @@ app.put('/grades/:courseID/:studentID', (req, res) => {
     const courseID = req.params.courseID;
     const studentID = req.params.studentID;
     const { courseID: newCourseID, studentID: newStudentID, gradeAssigned } = req.body;
-    const query = 'UPDATE Grades SET courseID = ?, studentID = ?, gradeAssigned = ? WHERE courseID = ? AND studentID = ?';
+    const query = 'UPDATE Grades SET courseID = ?, studentID = ?, gradeAssigned = ? WHERE courseID = ? AND studentID = ?;';
     db.pool.query(query, [newCourseID, newStudentID, gradeAssigned, courseID, studentID], (err, result) => {
         if (err) {
             res.status(400).json({ error: err.message });
@@ -312,7 +314,7 @@ app.put('/grades/:courseID/:studentID', (req, res) => {
 
 // Endpoint to get StudentIDs for Enrollments and Grades dropdown
 app.get('/get_student_ids', (req, res) => {
-    let query = 'SELECT studentID FROM Students';
+    let query = 'SELECT studentID FROM Students;';
     db.pool.query(query, (err, results) => {
         if (err) throw err;
         const studentIDs = results.map(row => row.studentID);
@@ -322,7 +324,7 @@ app.get('/get_student_ids', (req, res) => {
 
 // Endpoint to get CourseIDs for use in dropdown dropdown
 app.get('/get_course_ids', (req, res) => {
-    let query = 'SELECT courseID FROM Courses';
+    let query = 'SELECT courseID FROM Courses;';
     db.pool.query(query, (err, results) => {
         if (err) throw err;
         const courseIDs = results.map(row => row.courseID);
@@ -332,7 +334,7 @@ app.get('/get_course_ids', (req, res) => {
 
 // Endpoint to get EnrollmentIDs for use in CourseEnrollments dropdown
 app.get('/get_enrollment_ids', (req, res) => {
-    let query = 'SELECT enrollmentID FROM Enrollments';
+    let query = 'SELECT enrollmentID FROM Enrollments;';
     db.pool.query(query, (err, results) => {
         if (err) throw err;
         const enrollmentIDs = results.map(row => row.enrollmentID);
@@ -342,7 +344,7 @@ app.get('/get_enrollment_ids', (req, res) => {
 
 // Endpoint to get StateCourseCodes for Courses dropdown
 app.get('/get_state_course_codes', (req, res) => {
-    let query = 'SELECT stateCourseCode FROM StateCourseCodes';
+    let query = 'SELECT stateCourseCode FROM StateCourseCodes;';
     db.pool.query(query, (err, results) => {
         if (err) throw err;
         const stateCourseCodes = results.map(row => row.stateCourseCode);
