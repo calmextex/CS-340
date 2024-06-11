@@ -55,11 +55,6 @@
             document.getElementById('updateCourseCode').value = courseCode;
         }
 
-        function deleteCourse(id, name) { 
-            showForm('delete');
-            document.getElementById('deleteCourseID').innerText = id;
-            document.getElementById('deleteCourseName').innerText = name;
-        }
 
         function selectCourse() { 
             showForm('select'); 
@@ -103,9 +98,9 @@
                 <th>Course Code</th>
             </tr>
             {{#each data}}
-            <tr>
-                <td><a href="#" onClick="updateCourse()">Edit</a></td>
-                <td><a href="#" onClick="deleteCourse()">Delete</a></td>
+            <tr data-value={{this.courseID}}>
+                <td><a href="#" onClick="updateCourse({{this.courseID}})">Edit</a></td>
+                <td><a href="#" onClick="deleteCourse({{this.courseID}})">Delete</a></td>
                 <td>{{this.courseID}}</td>
                 <td>{{this.courseName}}</td>
                 <td>{{this.stateCourseCode}}</td>
@@ -113,6 +108,7 @@
             {{/each}}
             <!-- Add more rows as needed -->
         </table>
+        <script src="/js/d.courses.js"></script>
         <p>&nbsp;</p>
     </div>
 
@@ -145,18 +141,5 @@
         </form>
     </div>
 
-    <div id="delete" style="display:none;">
-        <form method="POST" id="deleteCourse">
-            <legend><strong>Delete Course</strong></legend>
-            <fieldset class="fields">
-                <p>Do you want to delete?</p>
-                <div><label><strong>Course ID:</strong></label> <span id="deleteCourseID"></span></div>
-                <div><label> <strong>Name:</strong> </label> <span id="deleteCourseName"></span></div>
-            </fieldset>
-            <input type="hidden" name="courseID" id="deleteCourseIDInput" value="">
-            <input class="btn" type="submit" value="Delete Course">
-            <input class="btn" type="button" value="Cancel" onClick="selectCourse()">
-        </form>
-    </div>
     </main>
 </body>
