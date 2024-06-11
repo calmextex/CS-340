@@ -62,12 +62,6 @@
             document.getElementById('updateGradeValue').value = gradeValue;
         }
 
-        function deleteGrade(pid, name) { 
-            viewForm('delete');
-            document.getElementById('deleteGradeID').innerText = pid;
-            document.getElementById('deleteGradeValue').innerText = name;
-        }
-
         function selectGrade() { 
             viewForm('select'); 
         }
@@ -110,20 +104,21 @@
                 <th>Grade Assigned</th>
             </tr>
             {{#each data}}
-            <tr>
-                <td><a href="#" onClick="updateGrade()">Edit</a></td>
-                <td><a href="#" onClick="deleteGrade()">Delete</a></td>
+            <tr data-value={{this.courseID}}>
+                <td><a href="#" onClick="updateGrade({{this.courseID}})">Edit</a></td>
+                <td><a href="#" onClick="deleteGrade({{this.courseID}})">Delete</a></td>
                 <td>{{this.courseID}}</td>
                 <td>{{this.studentID}}</td>
                 <td>{{this.gradeAssigned}}</td>
             </tr>
             {{/each}}
         </table>
+        <script src="/js/d.grades.js"></script>
         <p>&nbsp;</p>
     </div>
 
     <div id="insert" style="display:none;">
-        <form method="POST" id="addGrade">
+        <form id="addGrades-form" method="POST" actio="/addGrades-form">
             <legend><strong>Add a new grade</strong></legend>
             <fieldset class="fields">
                 <div><label> Course ID </label>
@@ -153,18 +148,6 @@
         </form>
     </div>
 
-    <div id="delete" style="display:none;">
-        <form method="POST" id="deleteGrade">
-            <legend><strong>Delete Grade</strong></legend>
-            <fieldset class="fields">
-                <p>Do you want to delete?</p>
-                <div><label><strong>Grade ID:</strong></label> <span id="deleteGradeID"></span></div>
-                <div><label> <strong>Value:</strong> </label> <span id="deleteGradeValue"></span></div>
-            </fieldset>
-            <input type="hidden" name="gradeID" id="deleteGradeIDInput" value="">
-            <input class="btn" type="submit" value="Delete Grade">
-            <input class="btn" type="button" value="Cancel" onClick="selectGrade()">
-        </form>
-    </div>
+    
 </main>
 </body>
