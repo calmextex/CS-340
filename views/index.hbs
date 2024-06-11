@@ -1,5 +1,20 @@
 <main>
     <body>
-        <p>This is a student information system. Click on the tabs above view each entity.</p>
+        <p><strong>CS340</strong></p>
+        <p><strong>Project Step 6 Group 59</strong> </p>
+        <p><strong>Project Title:</strong> Student Information System</p>
+        <p></p>
+    <p><strong>Team Members:</strong> </p>
+    <p>Mikaella Shelby & Abraham Zamora</P>
+
+
+<p><strong>Executive Summary:</strong></p>
+
+<p>Originally, we had 5 tables, Students, Grades, Courses, StateCourseCodes, and CourseEnrollments.  Based on the feedback we received in the early stages, we realized that we likely needed a different intermediary table that would yield CourseEnrollments based on the input of Courses and some other table.  Intuitively, this makes sense.  Having worked with an SIS before, an Enrollment table made more sense (i.e. a yearly enrollment), and then the course enrollment would have multiple enrollments based on one yearly enrollment as a student would take many courses.  </p>
+<p></p>
+<p>In the Course Enrollments table, we removed a unique ID as a primary key and just made it two foreign keys from the Courses and the Enrollments table (Enrollment ID and Course ID).  As such, the relationship between Enrollments and Course Enrollments is 1:M and Courses to Course Enrollments is M:N.    </p>
+<p></p>
+<p>The main idea for the other entities remains.  State Course Codes continued to be a 1:M relationship with Courses based on the idea that a state course code is often used to determine the contents of a class, but there can be many courses with different names and purposes. For example, a Biology class and a remedial Biology class fall under the same course code (Biology for standard HS) while an AP Biology class would be a bit more specific (AP courses often require additional certification for a teacher in order to teach).  Students has a 1:M relationship with grades and courses has a M:N relationship with grades. A student can have multiple grades, and courses will have multiple grade records. 
+</p>
     </body>
 </main>
