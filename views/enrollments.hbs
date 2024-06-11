@@ -1,3 +1,4 @@
+
 <script language="JavaScript">
         document.addEventListener('DOMContentLoaded', function() {
         fetch('/get_student_ids')
@@ -57,11 +58,6 @@
             document.getElementById('updateEnrollmentEndDate').value = enrollmentEndDate;
         }
 
-        function deleteEnrollment(id) { 
-            showForm('delete');
-            document.getElementById('deleteEnrollmentID').innerText = id;
-        }
-
         function selectEnrollment() { 
             showForm('select'); 
         }
@@ -98,25 +94,27 @@
         <p><a href="#" onClick="newEnrollment()">New Enrollment</a></p>
         <table id="enrollmentsTable" border="1" cellpadding="5">
             <tr>
-                <th>Edit</th>
-                <th>Delete</th>
+                
                 <th>Enrollment ID</th>
                 <th>Student ID</th>
                 <th>Enrollment Start Date</th>
                 <th>Enrollment End Date</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
             {{#each data}}
-            <tr>
-                <td><a href="#" onClick="updateEnrollment()">Edit</a></td>
-                <td><a href="#" onClick="deleteEnrollment()">Delete</a></td>
+            <tr data-value={{this.enrollmentID}}>
                 <td>{{this.enrollmentID}}</td>
                 <td>{{this.studentID}}</td>
                 <td>{{this.enrollmentStartDate}}</td>
                 <td>{{this.enrollmentEndDate}}</td>
+                <td><button onClick="updateEnrollment({{this.enrollmentID}})">Edit</button></td>
+            <td><button onClick="deleteEnrollment({{this.enrollmentID}})">Delete</button></td>
             </tr>
             {{/each}}
             <!-- Add more rows as needed -->
         </table>
+        <script src="/js/d.enrollments.js"></script>
         <p>&nbsp;</p>
     </div>
 
@@ -136,12 +134,19 @@
     </div>
 
     <div id="update" style="display:none;">
-        <form method="POST" id="updateEnrollment">
+        <form method="POST" id="updateEnrollment" action="/updateEnrollments">
             <legend><strong>Update Enrollment</strong></legend>
             <fieldset class="fields">
                 <input type="hidden" name="enrollmentID" id="updateEnrollmentID" value="">
+                <div><label> Student ID: </label> 
+                <select name="student_id" id="updateStudentID">
+                    <option value="">Student ID</option>
+                    {{#each IDS}}
+                    <option value="{{this.studentID}}">{{this.studentID}}</option>
+                    {{/each}}
+                </select>
+                </div>
                 <div><label> Enrollment ID: </label> <span id="updateEnrollmentIDDisplay"></span></div>
-                <div><label> Student ID </label> <input type="text" name="student_id" id="updateStudentID" value=""></div>
                 <div><label> Enrollment Start Date </label> <input type="text" name="enrollment_start_date" id="updateEnrollmentStartDate" value=""></div>
                 <div><label> Enrollment End Date </label> <input type="text" name="enrollment_end_date" id="updateEnrollmentEndDate" value=""></div>
             </fieldset>
@@ -151,7 +156,7 @@
     </div>
 
     <div id="delete" style="display:none;">
-        <form method="POST" id="deleteEnrollment">
+        <form method="POST" id="deleteEnrollment" action="/deleteEnrollment">
             <legend><strong>Delete Enrollment</strong></legend>
             <fieldset class="fields">
                 <p>Do you want to delete?</p>
